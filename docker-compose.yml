@@ -1,0 +1,13 @@
+logioweb:
+  image: 'blacklabelops/nginx'
+  environment:
+    - 'SERVER_NAME=_'
+    - 'REVERSE_PROXY_LOCATION=/'
+    - 'REVERSE_PROXY_PASS=http://www.heise.de'
+    - 'REVERSE_PROXY_BUFFERING='
+    - 'REVERSE_PROXY_BUFFERS='
+    - 'REVERSE_PROXY_BUFFERS_SIZE='
+  ports:
+    - '8080:8080'
+  volumes:
+    - '/opt/nginx'
