@@ -6,18 +6,18 @@ Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](https://ww
 
 ~~~~
 $ docker run -d \
-    -p 8080:8080 \
+    -p 80:8080 \
     --name nginx \
     blacklabelops/nginx
 ~~~~
 
-> Default server installation will be available on port 8080.
+> Default server installation will be available on port 80.
 
 # Reverse Proxy Setup
 
 ~~~~
 $ docker run -d \
-    -p 8080:8080 \
+    -p 80:8080 \
     --name nginx \
     -e "REVERSE_PROXY_LOCATION=/" \
     -e "REVERSE_PROXY_PASS=http://www.heise.de" \
@@ -44,7 +44,7 @@ Reverse Proxy 2:
 
 ~~~~
 $ docker run -d \
-    -p 8080:8080 \
+    -p 80:8080 \
     --name nginx \
     -e "REVERSE_PROXY_LOCATION1=/" \
     -e "REVERSE_PROXY_PASS1=http://www.heise.de" \
@@ -53,7 +53,74 @@ $ docker run -d \
     blacklabelops/nginx
 ~~~~
 
-> Now try accessing http://localhost:8080 and https://localhost:8080/alternate (When using docker tools replace localhost with the respective ip)
+> Now try accessing http://localhost and https://localhost/alternate (When using docker tools replace localhost with the respective ip)
+
+# HTTPS Reverse Proxy
+
+This container supports HTTPS. Just enter a DName with the environment variable CERTIFICATE_DNAME and the container creates a self-signed certificate. You have to pass Distinguished Name (DN). The certificate is generated with the Distinguished Name. This is a DN-Example:
+
+~~~~
+/CN=SBleul/OU=Blacklabelops/O=blacklabelops.net/L=Munich/C=DE
+~~~~
+
+  * CN = Your name
+  * OU = Your organizational unit.
+  * O = Organisation name.
+  * L = Location, e.g. town name.
+  * C = Locale of your county.
+
+~~~~
+$ docker run -d \
+    -p 80:8080 \
+    -p 443:44300 \
+    -e "REVERSE_PROXY_LOCATION=/" \
+    -e "REVERSE_PROXY_PASS=http://www.heise.de" \
+    -e "CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
+    -e "HTTPS_ENABLED=true" \
+    --name nginx \
+    blacklabelops/nginx
+~~~~
+
+> Note: Webserver will use same port for HTTPS!
+
+# Custom HTTPS Certificates
+
+Using your own certificates: Mount them inside the
+container define their location with the environment-variables CERTIFICATE_FILE and CERTIFICATE_KEY.
+
+~~~~
+$ docker run -d \
+    -p 80:8080 \
+    -p 443:44300 \
+    -v /mycertificatepath/mycertificates:/opt/nginx/keys \
+    -e "REVERSE_PROXY_LOCATION=/" \
+    -e "REVERSE_PROXY_PASS=http://www.heise.de" \
+    -e "HTTPS_ENABLED=true" \
+    -e "CERTIFICATE_FILE=/opt/nginx/keys/server.csr" \
+    -e "CERTIFICATE_KEY=/opt/nginx/keys/server.key" \
+    --name nginx \
+    blacklabelops/nginx
+~~~~
+
+# Disable HTTP
+
+HTTP should be disabled when using HTTPS. Just disable the port and disable HTTP inside the config using the environment-variable HTTP_ENABLED.
+
+Example:
+
+~~~~
+$ docker run -d \
+    -p 44300:44300 \
+    -e "REVERSE_PROXY_LOCATION=/" \
+    -e "REVERSE_PROXY_PASS=http://www.heise.de" \
+    -e "HTTPS_ENABLED=true" \
+    -e "CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
+    -e "HTTP_ENABLED=false" \
+    --name nginx \
+    blacklabelops/nginx
+~~~~
+
+> The reverse proxy will now only offer HTTPS communication!
 
 # Vagrant
 
