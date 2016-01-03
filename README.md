@@ -161,12 +161,12 @@ Now you can use the certificate for your reverse proxy!
 
 ~~~~
 $ docker run -d \
-    -p 80:8080 \
     -p 443:44300 \
     --volumes-from letsencrypt_data \
     -e "REVERSE_PROXY_LOCATION=/" \
     -e "REVERSE_PROXY_PASS=http://www.heise.de" \
     -e "HTTPS_ENABLED=true" \
+    -e "HTTP_ENABLED=false" \
     -e "LETSENCRYPT_CERTIFICATES=true" \
     -e "CERTIFICATE_FILE=/etc/letsencrypt/live/example.com/fullchain.pem" \
     -e "CERTIFICATE_KEY=/etc/letsencrypt/live/example.com/privkey.pem" \
@@ -175,6 +175,7 @@ $ docker run -d \
     blacklabelops/nginx
 ~~~~
 
+> LETSENCRYPT_CERTIFICATES switches on special configuration for their certificates.
 
 # Vagrant
 
