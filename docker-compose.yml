@@ -1,5 +1,6 @@
 logioweb:
   image: 'blacklabelops/nginx'
+  name: nginx_reverse_proxy
   environment:
     - 'SERVER_NAME=_'
     - 'REVERSE_PROXY_LOCATION=/'
@@ -8,6 +9,6 @@ logioweb:
     - 'REVERSE_PROXY_BUFFERS='
     - 'REVERSE_PROXY_BUFFERS_SIZE='
   ports:
-    - '8080:8080'
+    - '80:8080'
   volumes:
     - '/opt/nginx'

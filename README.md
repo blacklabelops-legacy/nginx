@@ -122,6 +122,60 @@ $ docker run -d \
 
 > The reverse proxy will now only offer HTTPS communication!
 
+# Generating Green HTTPS Certificates with Letsencrypt
+
+You can get and use free green certificates by [Letsencrypt](https://letsencrypt.org/). Here I will provide a manual way to generate and retrieve the certificate manually and use it inside the container. The full detailed letsencrypt documentation can be found here: [Documentation](https://community.letsencrypt.org/c/docs/)
+
+Note: This will not work inside boot2docker on your local comp. You will have to do this inside your target environment.
+
+First start a data container where the certificate will be stored.
+
+~~~~
+$ docker run -d \
+    -v /etc/letsencrypt \
+    --name letsencrypt_data \
+    blacklabelops/centos bash -c "chown -R 1000:1000 /etc/letsencrypt"
+~~~~
+
+> Letsencrypt stores the certificates inside the folder /etc/letsencryp.
+
+Then start the letsencrypt container interactively and create the certificates manually.
+
+~~~~
+$ docker run -it --rm -p 443:443 -p 80:80 --name letsencrypt \
+    --volumes-from letsencrypt_data \
+    quay.io/letsencrypt/letsencrypt:latest auth
+~~~~
+
+> This container will handshake with letsencrypt.org and generate the certificates when successful.
+
+Before we can use them you will have to set the appropriate permissions for the nginx user!
+
+~~~~
+$ docker start letsencrypt_data
+~~~~
+
+> The data container will repeat the instruction: chown -R 1000:1000 /etc/letsencrypt
+
+Now you can use the certificate for your reverse proxy!
+
+~~~~
+$ docker run -d \
+    -p 80:8080 \
+    -p 443:44300 \
+    --volumes-from letsencrypt_data \
+    -e "REVERSE_PROXY_LOCATION=/" \
+    -e "REVERSE_PROXY_PASS=http://www.heise.de" \
+    -e "HTTPS_ENABLED=true" \
+    -e "LETSENCRYPT_CERTIFICATES=true" \
+    -e "CERTIFICATE_FILE=/etc/letsencrypt/live/example.com/fullchain.pem" \
+    -e "CERTIFICATE_KEY=/etc/letsencrypt/live/example.com/privkey.pem" \
+    -e "CERTIFICATE_TRUSTED=etc/letsencrypt/live/example.com/fullchain.pem" \
+    --name nginx \
+    blacklabelops/nginx
+~~~~
+
+
 # Vagrant
 
 Vagrant is fabulous tool for pulling and spinning up virtual machines like docker with containers. I can configure my development and test environment and simply pull it online. And so can you! Install Vagrant and Virtualbox and spin it up. Change into the project folder and build the project on the spot!
@@ -145,6 +199,7 @@ Vagrant does not leave any docker artifacts on your beloved desktop and the vagr
 ## References
 
 * [NGINX](http://nginx.org/)
+* [Letsencrypt](https://letsencrypt.org/)
 * [Docker Homepage](https://www.docker.com/)
 * [Docker Compose](https://docs.docker.com/compose/)
 * [Docker Userguide](https://docs.docker.com/userguide/)
