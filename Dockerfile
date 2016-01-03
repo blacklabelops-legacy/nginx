@@ -20,6 +20,7 @@ RUN yum install -y epel-release && \
     touch /var/log/nginx/access.log && \
     touch /var/log/nginx/error.log && \
     chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /var/log/nginx
+
 EXPOSE 8080
 
 USER $CONTAINER_USER

@@ -1,0 +1,15 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker version
+    - docker info
+    - docker build -t="blacklabelops/nginx" .
+
+test:
+  override:
+    - docker run -d --name="nginx" blacklabelops/nginx
+    - docker logs nginx
+    - docker stop nginx

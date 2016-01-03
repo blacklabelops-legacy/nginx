@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 set -o errexit
 
@@ -37,9 +37,13 @@ http {
     include /opt/nginx/conf.d/*.conf;
 _EOF_
 
-if [ -n "${REVERSE_PROXY_LOCATION}" ]; then
+if [ -n "${REVERSE_PROXY_LOCATION}" ] || [ -n "${REVERSE_PROXY_LOCATION1}" ]; then
   source /opt/nginx-scripts/custom_server.sh
   source /opt/nginx-scripts/reverse_proxy.sh
+  source /opt/nginx-scripts/iterate_reverse_proxy.sh
+  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+    }
+_EOF_
 else
   source /opt/nginx-scripts/default_server.sh
 fi
@@ -47,6 +51,8 @@ fi
 cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
 }
 _EOF_
+
+cat ${NGINX_DIRECTORY}/nginx.conf
 
 if [ "$1" = 'nginx' ]; then
   nginx -c ${NGINX_DIRECTORY}/nginx.conf -g "daemon off;"

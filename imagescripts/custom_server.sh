@@ -16,5 +16,5 @@ cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
 
         # Load configuration files for the default server block.
         include /opt/nginx/default.d/*.conf;
-        
+
 _EOF_
