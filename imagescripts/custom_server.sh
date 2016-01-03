@@ -91,7 +91,7 @@ if [ -n "$CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
 _EOF_
 fi
 
-if [ -n "${LETSENCRYPT_CERTIFICATES}" = 'true' ]; then
+if [ "${LETSENCRYPT_CERTIFICATES}" = 'true' ]; then
   if [ ! -f "/opt/nginx/dhparam.pem" ]; then
     openssl dhparam -out /opt/nginx/dhparam.pem 2048
   fi

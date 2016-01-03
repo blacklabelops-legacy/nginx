@@ -170,7 +170,7 @@ $ docker run -d \
     -e "LETSENCRYPT_CERTIFICATES=true" \
     -e "CERTIFICATE_FILE=/etc/letsencrypt/live/example.com/fullchain.pem" \
     -e "CERTIFICATE_KEY=/etc/letsencrypt/live/example.com/privkey.pem" \
-    -e "CERTIFICATE_TRUSTED=etc/letsencrypt/live/example.com/fullchain.pem" \
+    -e "CERTIFICATE_TRUSTED=/etc/letsencrypt/live/example.com/fullchain.pem" \
     --name nginx \
     blacklabelops/nginx
 ~~~~
