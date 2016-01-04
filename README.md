@@ -137,7 +137,7 @@ $ docker run -d \
     blacklabelops/centos bash -c "chown -R 1000:1000 /etc/letsencrypt"
 ~~~~
 
-> Letsencrypt stores the certificates inside the folder /etc/letsencryp.
+> Letsencrypt stores the certificates inside the folder /etc/letsencrypt.
 
 Then start the letsencrypt container interactively and create the certificates manually.
 
@@ -193,7 +193,7 @@ $ vagrant ssh
 [vagrant@localhost ~]$ docker-compose up
 ~~~~
 
-> Reverse Proxy will be available on localhost:8080 on the host machine.
+> Reverse Proxy will be available on localhost:80 on the host machine.
 
 Vagrant does not leave any docker artifacts on your beloved desktop and the vagrant image can simply be destroyed and repulled if anything goes wrong. Test my project to your heart's content!
 
