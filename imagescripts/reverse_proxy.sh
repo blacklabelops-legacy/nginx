@@ -17,6 +17,7 @@ _EOF_
   if [ -n "${NGINX_PROXY_PASS}" ]; then
     cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
           proxy_pass ${NGINX_PROXY_PASS};
+          proxy_redirect off;
 _EOF_
   fi
 
