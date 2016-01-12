@@ -197,22 +197,6 @@ $ vagrant ssh
 
 Vagrant does not leave any docker artifacts on your beloved desktop and the vagrant image can simply be destroyed and repulled if anything goes wrong. Test my project to your heart's content!
 
-# Notes
-
-When you specify REVERSE_PROXY_PASS always omit the '/' at then end of the URL, the bash scripts will add this.
-
-Correct:
-
-~~~~
-REVERSE_PROXY_PASS="http://www.heise.de"
-~~~~
-
-Wrong:
-
-~~~~
-REVERSE_PROXY_PASS="http://www.heise.de/"
-~~~~
-
 ## References
 
 * [NGINX](http://nginx.org/)
