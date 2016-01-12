@@ -19,8 +19,8 @@ $ docker run -d \
 $ docker run -d \
     -p 80:8080 \
     --name nginx \
-    -e "REVERSE_PROXY_LOCATION=/" \
-    -e "REVERSE_PROXY_PASS=http://www.heise.de" \
+    -e "REVERSE_PROXY_LOCATION1=/" \
+    -e "REVERSE_PROXY_PASS1=http://www.heise.de" \
     blacklabelops/nginx
 ~~~~
 
@@ -73,8 +73,8 @@ This container supports HTTPS. Just enter a DName with the environment variable 
 $ docker run -d \
     -p 80:8080 \
     -p 443:44300 \
-    -e "REVERSE_PROXY_LOCATION=/" \
-    -e "REVERSE_PROXY_PASS=http://www.heise.de" \
+    -e "REVERSE_PROXY_LOCATION1=/" \
+    -e "REVERSE_PROXY_PASS1=http://www.heise.de" \
     -e "CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
     -e "HTTPS_ENABLED=true" \
     --name nginx \
@@ -93,8 +93,8 @@ $ docker run -d \
     -p 80:8080 \
     -p 443:44300 \
     -v /mycertificatepath/mycertificates:/opt/nginx/keys \
-    -e "REVERSE_PROXY_LOCATION=/" \
-    -e "REVERSE_PROXY_PASS=http://www.heise.de" \
+    -e "REVERSE_PROXY_LOCATION1=/" \
+    -e "REVERSE_PROXY_PASS1=http://www.heise.de" \
     -e "HTTPS_ENABLED=true" \
     -e "CERTIFICATE_FILE=/opt/nginx/keys/server.csr" \
     -e "CERTIFICATE_KEY=/opt/nginx/keys/server.key" \
@@ -111,8 +111,8 @@ Example:
 ~~~~
 $ docker run -d \
     -p 44300:44300 \
-    -e "REVERSE_PROXY_LOCATION=/" \
-    -e "REVERSE_PROXY_PASS=http://www.heise.de" \
+    -e "REVERSE_PROXY_LOCATION1=/" \
+    -e "REVERSE_PROXY_PASS1=http://www.heise.de" \
     -e "HTTPS_ENABLED=true" \
     -e "CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
     -e "HTTP_ENABLED=false" \
