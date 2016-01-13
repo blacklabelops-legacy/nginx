@@ -2,100 +2,126 @@
 
 set -o errexit
 
-NGINX_SERVER_NAME="_"
+for (( j = 1; ; j++ ))
+do
+  VAR_TESTPASS="SERVER${j}REVERSE_PROXY_LOCATION1"
+  VAR_NGINX_SERVER_NAME="SERVER${j}SERVER_NAME"
+  VAR_NGINX_HTTP_ENABLED="SERVER${j}HTTP_ENABLED"
+  VAR_NGINX_HTTPS_ENABLED="SERVER${j}HTTPS_ENABLED"
+  VAR_NGINX_CERTIFICATE_FILE="SERVER${j}CERTIFICATE_FILE"
+  VAR_NGINX_CERTIFICATE_KEY="SERVER${j}CERTIFICATE_KEY"
+  VAR_NGINX_CERTIFICATE_TRUSTED="SERVER${j}CERTIFICATE_TRUSTED"
+  VAR_NGINX_CERTIFICATE_DNAME="SERVER${j}CERTIFICATE_DNAME"
+  VAR_LETSENCRYPT_CERTIFICATES="SERVER${j}LETSENCRYPT_CERTIFICATES"
 
-NGINX_HTTP_ENABLED="true"
-NGINX_HTTPS_ENABLED="false"
+  if [ ! -n "${!VAR_TESTPASS}" ]; then
+    break
+  fi
 
-if [ -n "${SERVER_NAME}" ]; then
-  NGINX_SERVER_NAME=${SERVER_NAME}
-fi
+  NGINX_SERVER_NAME="_"
 
-if [ -n "${HTTP_ENABLED}" ]; then
-  NGINX_HTTP_ENABLED=${HTTP_ENABLED}
-fi
+  NGINX_HTTP_ENABLED="true"
+  NGINX_HTTPS_ENABLED="false"
 
-if [ -n "${HTTPS_ENABLED}" ]; then
-  NGINX_HTTPS_ENABLED=${HTTPS_ENABLED}
-fi
+  if [ -n "${!VAR_NGINX_SERVER_NAME}" ]; then
+    NGINX_SERVER_NAME=${!VAR_NGINX_SERVER_NAME}
+  fi
 
-NGINX_CERTIFICATE_FILE="${NGINX_DIRECTORY}/keys/server.crt"
-NGINX_CERTIFICATE_KEY="${NGINX_DIRECTORY}/keys/server.key"
-NGINX_CERTIFICATE_TRUSTED=""
+  if [ -n "${!VAR_NGINX_HTTP_ENABLED}" ]; then
+    NGINX_HTTP_ENABLED=${!VAR_NGINX_HTTP_ENABLED}
+  fi
 
-if [ -n "${CERTIFICATE_FILE}" ]; then
-  NGINX_CERTIFICATE_FILE=${CERTIFICATE_FILE}
-fi
+  if [ -n "${!VAR_NGINX_HTTPS_ENABLED}" ]; then
+    NGINX_HTTPS_ENABLED=${!VAR_NGINX_HTTPS_ENABLED}
+  fi
 
-if [ -n "${CERTIFICATE_KEY}" ]; then
-  NGINX_CERTIFICATE_KEY=${CERTIFICATE_KEY}
-fi
+  NGINX_CERTIFICATE_FILE="${NGINX_DIRECTORY}/keys/server.crt"
+  NGINX_CERTIFICATE_KEY="${NGINX_DIRECTORY}/keys/server.key"
+  NGINX_CERTIFICATE_TRUSTED=""
 
-if [ -n "${CERTIFICATE_TRUSTED}" ]; then
-  NGINX_CERTIFICATE_TRUSTED=${CERTIFICATE_TRUSTED}
-fi
+  if [ -n "${!VAR_NGINX_CERTIFICATE_FILE}" ]; then
+    NGINX_CERTIFICATE_FILE=${!VAR_NGINX_CERTIFICATE_FILE}
+  fi
 
-cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+  if [ -n "${!VAR_NGINX_CERTIFICATE_KEY}" ]; then
+    NGINX_CERTIFICATE_KEY=${!VAR_NGINX_CERTIFICATE_KEY}
+  fi
+
+  if [ -n "${!VAR_NGINX_CERTIFICATE_TRUSTED}" ]; then
+    NGINX_CERTIFICATE_TRUSTED=${!VAR_NGINX_CERTIFICATE_TRUSTED}
+  fi
+
+  NGINX_CERTIFICATE_DNAME=${!VAR_NGINX_CERTIFICATE_DNAME}
+  NGINX_LETSENCRYPT_CERTIFICATES=${!VAR_LETSENCRYPT_CERTIFICATES}
+
+  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
     server {
 _EOF_
 
-if [ "${NGINX_HTTP_ENABLED}" = 'true' ]; then
-  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+  if [ "${NGINX_HTTP_ENABLED}" = 'true' ]; then
+    if [ "${NGINX_SERVER_NAME}" = '_' ]; then
+      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
         listen       8080 default_server;
         listen       [::]:8080 default_server;
 _EOF_
-fi
+    else
+      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+        listen       8080;
+        listen       [::]:8080;
+_EOF_
+    fi
+  fi
 
-if [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
-  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+  if [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
+    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
         listen              44300 ssl;
         keepalive_timeout   70;
 _EOF_
-fi
+  fi
 
-cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
         server_name  ${NGINX_SERVER_NAME};
 
         # Load configuration files for the default server block.
-        include /opt/nginx/default.d/*.conf;
+        include /opt/nginx/default.d/server${j}/*.conf;
 
 _EOF_
 
-if [ -n "$CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
-  if [ ! -f "${NGINX_DIRECTORY}/keys/server.key" ]; then
-    openssl req -subj "${CERTIFICATE_DNAME}" -new -newkey rsa:4096 -days 365 -nodes -x509 -keyout ${NGINX_DIRECTORY}/keys/server.key -out ${NGINX_DIRECTORY}/keys/server.crt
+  if [ -n "$CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
+    if [ ! -f "${NGINX_DIRECTORY}/keys/server.key" ]; then
+      openssl req -subj "${NGINX_CERTIFICATE_DNAME}" -new -newkey rsa:4096 -days 365 -nodes -x509 -keyout ${NGINX_DIRECTORY}/keys/server.key -out ${NGINX_DIRECTORY}/keys/server.crt
+    fi
+    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+        ssl_certificate     ${NGINX_CERTIFICATE_FILE};
+        ssl_certificate_key ${NGINX_CERTIFICATE_KEY};
+_EOF_
   fi
-  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+
+  if [ ! -n "$NGINX_CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
+    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
         ssl_certificate     ${NGINX_CERTIFICATE_FILE};
         ssl_certificate_key ${NGINX_CERTIFICATE_KEY};
 _EOF_
-fi
+  fi
 
-if [ ! -n "$CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
-  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
-        ssl_certificate     ${NGINX_CERTIFICATE_FILE};
-        ssl_certificate_key ${NGINX_CERTIFICATE_KEY};
-_EOF_
-fi
-
-if [ -n "$NGINX_CERTIFICATE_TRUSTED" ]; then
-  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+  if [ -n "$NGINX_CERTIFICATE_TRUSTED" ]; then
+    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
         ssl_trusted_certificate ${NGINX_CERTIFICATE_TRUSTED};
 _EOF_
-fi
+  fi
 
-if [ -n "$CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
-  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+  if [ -n "$NGINX_CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
+    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
         ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
         ssl_ciphers         HIGH:!aNULL:!MD5;
 _EOF_
-fi
-
-if [ "${LETSENCRYPT_CERTIFICATES}" = 'true' ]; then
-  if [ ! -f "/opt/nginx/dhparam.pem" ]; then
-    openssl dhparam -out /opt/nginx/dhparam.pem 2048
   fi
-  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+
+  if [ "${NGINX_LETSENCRYPT_CERTIFICATES}" = 'true' ]; then
+    if [ ! -f "/opt/nginx/dhparam.pem" ]; then
+      openssl dhparam -out /opt/nginx/dhparam.pem 2048
+    fi
+    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
         ssl_session_timeout 1d;
         ssl_session_cache shared:SSL:50m;
 
@@ -118,4 +144,13 @@ if [ "${LETSENCRYPT_CERTIFICATES}" = 'true' ]; then
         ssl_stapling on;
         ssl_stapling_verify on;
 _EOF_
-fi
+  fi
+
+  source /opt/nginx-scripts/reverse_proxy.sh SERVER${j}
+
+  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+    }
+
+_EOF_
+
+done

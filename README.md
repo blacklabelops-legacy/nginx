@@ -1,5 +1,19 @@
 Multi purpose Docker image with Nginx.
 
+Major rewrite: The naming of the environment variables have been changed in order to support multiple servers and proxies. If you are using the old naming of environment variables then switch to the old version of this image on docherhub:
+
+~~~~
+blacklabelops/nginx:0.0.1
+~~~~
+
+Features:
+
+* Supports configuration of multiple servers with environment variables.
+* Supports an arbitrary amount of reverse proxies for every server.
+* Supports https and ad-hoc self-signed certificates
+* Supports ssl certificate specification for every server.
+* Supports letsencryt certificates.
+
 Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](https://www.hipchat.com/geogBFvEM)
 
 # Make It Short!
@@ -19,16 +33,47 @@ $ docker run -d \
 $ docker run -d \
     -p 80:8080 \
     --name nginx \
-    -e "REVERSE_PROXY_LOCATION1=/" \
-    -e "REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
     blacklabelops/nginx
 ~~~~
 
 > Reverse proxy will pass to site http://www.heise.de.
 
+# Multiple servers
+
+It is possible to define an arbitrary amount of server definitions with environment variables. Each variable must be precede by the string "SERVER" and the number of the server.
+
+Example:
+
+Server 1 Reverse Proxy 1:
+
+* Location: /
+* Proxy Pass: http://www.heise.de
+
+Server 2 Reverse Proxy 1:
+
+* Server name: dummy.example.com
+* Location: /
+* Proxy Pass: http://www.alternate.de
+
+~~~~
+$ docker run -d \
+    -p 80:8080 \
+    --name nginx \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER2SERVER_NAME=dummy.example.com"
+    -e "SERVER2REVERSE_PROXY_LOCATION2=/alternate" \
+    -e "SERVER2REVERSE_PROXY_PASS2=http://www.alternate.de" \
+    blacklabelops/nginx
+~~~~
+
+> Now try accessing http://localhost (When using docker tools replace localhost with the respective ip) in order to invoke the second proxy you will have to use a dns server for requests originating from dummy.example.com
+
 # Multiple Reverse Proxies
 
-It is possible to define an arbitrary amount of reverse proxies. Just add a number behind each environment variable.
+It is possible to define an arbitrary amount of reverse proxies for every server. Just precede each environment variable with the String "SERVER" and the number of the server and add a number behind each environment variable.
 
 Example:
 
@@ -46,10 +91,10 @@ Reverse Proxy 2:
 $ docker run -d \
     -p 80:8080 \
     --name nginx \
-    -e "REVERSE_PROXY_LOCATION1=/" \
-    -e "REVERSE_PROXY_PASS1=http://www.heise.de" \
-    -e "REVERSE_PROXY_LOCATION2=/alternate" \
-    -e "REVERSE_PROXY_PASS2=http://www.alternate.de" \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_LOCATION2=/alternate" \
+    -e "SERVER1REVERSE_PROXY_PASS2=http://www.alternate.de" \
     blacklabelops/nginx
 ~~~~
 
@@ -73,10 +118,10 @@ This container supports HTTPS. Just enter a DName with the environment variable 
 $ docker run -d \
     -p 80:8080 \
     -p 443:44300 \
-    -e "REVERSE_PROXY_LOCATION1=/" \
-    -e "REVERSE_PROXY_PASS1=http://www.heise.de" \
-    -e "CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
-    -e "HTTPS_ENABLED=true" \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
+    -e "SERVER1HTTPS_ENABLED=true" \
     --name nginx \
     blacklabelops/nginx
 ~~~~
@@ -93,11 +138,11 @@ $ docker run -d \
     -p 80:8080 \
     -p 443:44300 \
     -v /mycertificatepath/mycertificates:/opt/nginx/keys \
-    -e "REVERSE_PROXY_LOCATION1=/" \
-    -e "REVERSE_PROXY_PASS1=http://www.heise.de" \
-    -e "HTTPS_ENABLED=true" \
-    -e "CERTIFICATE_FILE=/opt/nginx/keys/server.csr" \
-    -e "CERTIFICATE_KEY=/opt/nginx/keys/server.key" \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1HTTPS_ENABLED=true" \
+    -e "SERVER1CERTIFICATE_FILE=/opt/nginx/keys/server.csr" \
+    -e "SERVER1CERTIFICATE_KEY=/opt/nginx/keys/server.key" \
     --name nginx \
     blacklabelops/nginx
 ~~~~
@@ -111,11 +156,11 @@ Example:
 ~~~~
 $ docker run -d \
     -p 44300:44300 \
-    -e "REVERSE_PROXY_LOCATION1=/" \
-    -e "REVERSE_PROXY_PASS1=http://www.heise.de" \
-    -e "HTTPS_ENABLED=true" \
-    -e "CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
-    -e "HTTP_ENABLED=false" \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1HTTPS_ENABLED=true" \
+    -e "SERVER1CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
+    -e "SERVER1HTTP_ENABLED=false" \
     --name nginx \
     blacklabelops/nginx
 ~~~~
@@ -163,14 +208,14 @@ Now you can use the certificate for your reverse proxy!
 $ docker run -d \
     -p 443:44300 \
     --volumes-from letsencrypt_data \
-    -e "REVERSE_PROXY_LOCATION=/" \
-    -e "REVERSE_PROXY_PASS=http://www.heise.de" \
-    -e "HTTPS_ENABLED=true" \
-    -e "HTTP_ENABLED=false" \
-    -e "LETSENCRYPT_CERTIFICATES=true" \
-    -e "CERTIFICATE_FILE=/etc/letsencrypt/live/example.com/fullchain.pem" \
-    -e "CERTIFICATE_KEY=/etc/letsencrypt/live/example.com/privkey.pem" \
-    -e "CERTIFICATE_TRUSTED=/etc/letsencrypt/live/example.com/fullchain.pem" \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1HTTPS_ENABLED=true" \
+    -e "SERVER1HTTP_ENABLED=false" \
+    -e "SERVER1LETSENCRYPT_CERTIFICATES=true" \
+    -e "SERVER1CERTIFICATE_FILE=/etc/letsencrypt/live/example.com/fullchain.pem" \
+    -e "SERVER1CERTIFICATE_KEY=/etc/letsencrypt/live/example.com/privkey.pem" \
+    -e "SERVER1CERTIFICATE_TRUSTED=/etc/letsencrypt/live/example.com/fullchain.pem" \
     --name nginx \
     blacklabelops/nginx
 ~~~~
