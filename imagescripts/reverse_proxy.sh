@@ -20,6 +20,8 @@ do
   NGINX_PROXY_BUFFERS=${!VAR_REVERSE_PROXY_BUFFERS}
   NGINX_PROXY_BUFFERS_SIZE=${!VAR_REVERSE_PROXY_BUFFERS_SIZE}
 
+  REVERSE_PROXY_REDIRECT_PATTERN='$scheme://$host/'
+
   cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
         location ${NGINX_PROXY_LOCATION} {
 _EOF_
@@ -27,6 +29,7 @@ _EOF_
   if [ -n "${NGINX_PROXY_PASS}" ]; then
     cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
           proxy_pass ${NGINX_PROXY_PASS};
+          proxy_redirect ${NGINX_PROXY_PASS} ${REVERSE_PROXY_REDIRECT_PATTERN};
 _EOF_
   fi
 

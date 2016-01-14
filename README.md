@@ -187,7 +187,7 @@ $ docker run -d \
 Then start the letsencrypt container interactively and create the certificates manually.
 
 ~~~~
-$ docker run -it --rm -p 443:443 -p 80:80 --name letsencrypt \
+$ docker run -it --rm -p 80:80 --name letsencrypt \
     --volumes-from letsencrypt_data \
     quay.io/letsencrypt/letsencrypt:latest auth
 ~~~~
