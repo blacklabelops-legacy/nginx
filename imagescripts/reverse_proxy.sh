@@ -23,6 +23,8 @@ do
   NGINX_PROXY_HOST=${!VAR_REVERSE_PROXY_HOST}
 
   REVERSE_PROXY_REDIRECT_PATTERN='$scheme://$host/'
+  REVERSE_PROXY_HOST_HEADER='$host'
+  REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR='$proxy_add_x_forwarded_for'
 
   cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
         location ${NGINX_PROXY_LOCATION} {
@@ -37,7 +39,9 @@ _EOF_
 
   if [ -n "${NGINX_PROXY_HOST}" ]; then
     cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
-          proxy_set_header Host ${NGINX_PROXY_HOST};
+          proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
+          proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
+          proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
 _EOF_
   fi
 
