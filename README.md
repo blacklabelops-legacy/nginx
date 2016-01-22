@@ -184,15 +184,20 @@ $ docker run -d \
 
 > Letsencrypt stores the certificates inside the folder /etc/letsencrypt.
 
-Then start the letsencrypt container interactively and create the certificates manually.
+Then start the letsencrypt container and create the certificate.
 
 ~~~~
-$ docker run -it --rm -p 80:80 --name letsencrypt \
+$ docker run --rm \
+    -p 80:80 \
+    -p 443:443 \
+    --name letsencrypt \
     --volumes-from letsencrypt_data \
-    quay.io/letsencrypt/letsencrypt:latest auth
+    -e "LETSENCRYPT_EMAIL=dummy@example.com" \
+    -e "LETSENCRYPT_DOMAIN1=example.com" \
+    blacklabelops/letsencrypt install
 ~~~~
 
-> This container will handshake with letsencrypt.org and generate the certificates when successful.
+> This container will handshake with letsencrypt.org and install an account and the certificate when successful.
 
 Before we can use them you will have to set the appropriate permissions for the nginx user!
 
