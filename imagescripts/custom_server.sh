@@ -87,7 +87,7 @@ _EOF_
 
 _EOF_
 
-  if [ -n "$CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
+  if [ -n "$NGINX_CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
     if [ ! -f "${NGINX_DIRECTORY}/keys/server.key" ]; then
       openssl req -subj "${NGINX_CERTIFICATE_DNAME}" -new -newkey rsa:4096 -days 365 -nodes -x509 -keyout ${NGINX_DIRECTORY}/keys/server.key -out ${NGINX_DIRECTORY}/keys/server.crt
     fi
