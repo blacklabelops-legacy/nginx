@@ -34,6 +34,7 @@ _EOF_
     cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
           proxy_pass ${NGINX_PROXY_PASS};
           proxy_redirect ${NGINX_PROXY_PASS} ${REVERSE_PROXY_REDIRECT_PATTERN};
+          proxy_set_header X_FORWARDED_PROTO $scheme;
 _EOF_
   fi
 
