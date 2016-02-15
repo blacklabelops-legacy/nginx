@@ -25,6 +25,7 @@ do
   REVERSE_PROXY_REDIRECT_PATTERN='$scheme://$host/'
   REVERSE_PROXY_HOST_HEADER='$host'
   REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR='$proxy_add_x_forwarded_for'
+  REVERSE_PROXY_PROTO_HEADER='$scheme'
 
   cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
         location ${NGINX_PROXY_LOCATION} {
@@ -34,7 +35,7 @@ _EOF_
     cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
           proxy_pass ${NGINX_PROXY_PASS};
           proxy_redirect ${NGINX_PROXY_PASS} ${REVERSE_PROXY_REDIRECT_PATTERN};
-          proxy_set_header X_FORWARDED_PROTO $scheme;
+          proxy_set_header X_FORWARDED_PROTO ${REVERSE_PROXY_PROTO_HEADER};
 _EOF_
   fi
 
