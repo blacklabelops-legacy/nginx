@@ -1,27 +1,36 @@
-FROM blacklabelops/centos
+FROM blacklabelops/alpine
 MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
-# Propert permissions
-ENV CONTAINER_USER nginx
-ENV CONTAINER_UID 1000
-ENV CONTAINER_GROUP nginx
-ENV CONTAINER_GID 1000
-
-RUN /usr/sbin/groupadd --gid $CONTAINER_GID nginx && \
-    /usr/sbin/useradd --uid $CONTAINER_UID --gid $CONTAINER_GID --create-home --shell /bin/bash nginx
+# Build time arguments
+#Values: latest or version number (e.g. 1.8.1-r0)
+ARG NGINX_VERSION=latest
+#Permissions, set the linux user id and group id
+ARG CONTAINER_UID=1000
+ARG CONTAINER_GID=1000
 
 # install dev tools
 ENV NGINX_DIRECTORY=/opt/nginx
-RUN yum install -y epel-release && \
-    yum install -y ca-certificates nginx openssl && \
-    yum clean all && rm -rf /var/cache/yum/* && \
+
+RUN export CONTAINER_USER=nginx && \
+    export CONTAINER_GROUP=nginx && \
+    # Add user
+    addgroup -g $CONTAINER_GID $CONTAINER_GROUP && \
+    adduser -u $CONTAINER_UID -G $CONTAINER_GROUP -h /home/$CONTAINER_USER -s /bin/bash -S $CONTAINER_USER && \
+    apk add --update \
+      ca-certificates \
+      openssl && \
+    if  [ "${NGINX_VERSION}" = "latest" ]; \
+      then apk add nginx ; \
+      else apk add "nginx=${NGINX_VERSION}" ; \
+    fi && \
     mkdir -p /var/log/nginx && \
     mkdir -p ${NGINX_DIRECTORY}/default.d && \
     mkdir -p ${NGINX_DIRECTORY}/conf.d && \
     mkdir -p ${NGINX_DIRECTORY}/keys && \
     touch /var/log/nginx/access.log && \
     touch /var/log/nginx/error.log && \
-    chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /var/log/nginx
+    chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /var/log/nginx && \
+    rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 EXPOSE 8080
 EXPOSE 44300
@@ -29,4 +38,5 @@ EXPOSE 44300
 USER $CONTAINER_USER
 COPY imagescripts/*.sh /opt/nginx-scripts/
 ENTRYPOINT ["/opt/nginx-scripts/docker-entrypoint.sh"]
+VOLUME ["/var/log/nginx"]
 CMD ["nginx"]
