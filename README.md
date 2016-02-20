@@ -293,6 +293,54 @@ $ docker build --build-arg CONTAINER_UID=2000 --build-arg CONTAINER_GID=2000 -t 
 
 > The container will write and read files with UID 2000 and GID 2000.
 
+# Use Your Own Config File
+
+Just mount or place your file at the position `/home/nginx/config.json`!
+
+Example:
+
+~~~~
+$ docker run -d \
+    -p 80:8080 \
+    --name nginx \
+    -v config.json:/home/nginx/config.json \
+    blacklabelops/nginx
+~~~~
+
+> File config.json is your local configuration file.
+
+# How To Extend This Image
+
+Minimal working example Dockerfile:
+
+~~~~
+FROM blacklabelops/nginx
+MAINTAINER Your Name <your@email.com>
+
+USER root
+RUN echo "Install Your Tools"
+
+USER nginx
+# Optional: Your config file
+COPY config.json /home/nginx/config.json
+# Optional: Your entrypoint:
+COPY entrypoint.sh /opt/nginx-scripts/
+ENTRYPOINT ["/opt/nginx-scripts/entrypoint.sh"]
+CMD ["nginx"]
+~~~~
+
+Minimal working example entrypoint `entrypoint.sh`:
+
+~~~~
+#!/bin/bash -x
+
+# Your code
+echo My script code
+
+# Then call image entrypoint
+exec /opt/nginx-scripts/docker-entrypoint.sh
+~~~~
+
 # Vagrant
 
 Vagrant is fabulous tool for pulling and spinning up virtual machines like docker with containers. I can configure my development and test environment and simply pull it online. And so can you! Install Vagrant and Virtualbox and spin it up. Change into the project folder and build the project on the spot!

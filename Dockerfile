@@ -27,8 +27,6 @@ RUN export CONTAINER_USER=nginx && \
     mkdir -p ${NGINX_DIRECTORY}/default.d && \
     mkdir -p ${NGINX_DIRECTORY}/conf.d && \
     mkdir -p ${NGINX_DIRECTORY}/keys && \
-    touch /var/log/nginx/access.log && \
-    touch /var/log/nginx/error.log && \
     chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /var/log/nginx && \
     rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
@@ -38,5 +36,5 @@ EXPOSE 44300
 USER $CONTAINER_USER
 COPY imagescripts/*.sh /opt/nginx-scripts/
 ENTRYPOINT ["/opt/nginx-scripts/docker-entrypoint.sh"]
-VOLUME ["/var/log/nginx"]
+VOLUME ["/home/nginx"]
 CMD ["nginx"]

@@ -2,7 +2,7 @@
 
 set -o errexit
 
-cat > ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
     server {
         listen       8080 default_server;
         listen       [::]:8080 default_server;
