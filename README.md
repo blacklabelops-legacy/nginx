@@ -227,6 +227,72 @@ $ docker run -d \
 
 > LETSENCRYPT_CERTIFICATES switches on special configuration for their certificates.
 
+# Build The Image
+
+The build process can take the following argument:
+
+* NGINX_VERSION: Takes keyword `latest` or specific NGINX version number. Default is `latest`.
+
+Examples:
+
+Build image with the latest Jenkins release:
+
+~~~~
+$ docker build -t blacklabelops/nginx .
+~~~~
+
+> Note: Dockerfile must be inside the current directory!
+
+Build image with a specific NGINX release:
+
+~~~~
+$ docker build --build-arg NGINX_VERSION=1.8.1-r0  -t blacklabelops/nginx .
+~~~~
+
+> Note: Dockerfile must be inside the current directory!
+
+# Using Docker Compose
+
+The build configuration are specified inside the following area:
+
+~~~~
+jenkins:
+  build:
+    context: .
+    dockerfile: Dockerfile
+    args:
+      NGINX_VERSION: latest
+~~~~
+
+> Adjust JENKINS_VERSION and JENKINS_RELEASE for your personal needs.
+
+Build the latest release with docker-compose:
+
+~~~~
+$ docker-compose build
+~~~~
+
+# Container Permissions
+
+Simply: You can set user-id and group-id matching to a user and group from your host machine!
+
+Due to security considerations this image is not running in root mode! The Jenkins process user inside the container is `nginx` and the user's group is `nginx`. This project offers a simplified mechanism for user- and group-mapping. You can set the uid of the user and gid of the user's group during build time.
+
+The process permissions are relevant when using volumes and mounted folders from the host machine. NGINX need read and write permissions on the host machine. You can set UID and GID of the NGINX's process during build time! UID and GID should resemble credentials from your host machine.
+
+The following build arguments can be used:
+
+* CONTAINER_UID: Set the user-id of the process. (default: 1000)
+* CONTAINER_GID: Set the group-id of the process. (default: 1000)
+
+Example:
+
+~~~~
+$ docker build --build-arg CONTAINER_UID=2000 --build-arg CONTAINER_GID=2000 -t blacklabelops/nginx .
+~~~~
+
+> The container will write and read files with UID 2000 and GID 2000.
+
 # Vagrant
 
 Vagrant is fabulous tool for pulling and spinning up virtual machines like docker with containers. I can configure my development and test environment and simply pull it online. And so can you! Install Vagrant and Virtualbox and spin it up. Change into the project folder and build the project on the spot!
