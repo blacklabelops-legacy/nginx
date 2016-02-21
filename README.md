@@ -264,7 +264,7 @@ jenkins:
       NGINX_VERSION: latest
 ~~~~
 
-> Adjust JENKINS_VERSION and JENKINS_RELEASE for your personal needs.
+> Adjust NGINX_VERSION for your personal needs.
 
 Build the latest release with docker-compose:
 
