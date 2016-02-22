@@ -28,6 +28,7 @@ RUN export CONTAINER_USER=nginx && \
     mkdir -p ${NGINX_DIRECTORY}/conf.d && \
     mkdir -p ${NGINX_DIRECTORY}/keys && \
     chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /var/log/nginx && \
+    chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /var/lib/nginx && \
     rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 EXPOSE 8080
