@@ -37,5 +37,5 @@ EXPOSE 44300
 USER $CONTAINER_USER
 COPY imagescripts/*.sh /opt/nginx-scripts/
 ENTRYPOINT ["/opt/nginx-scripts/docker-entrypoint.sh"]
-VOLUME ["/home/nginx","/var/lib/nginx/","/var/log/nginx"]
+VOLUME ["/home/nginx","/var/lib/nginx/"]
 CMD ["nginx"]
