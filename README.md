@@ -32,6 +32,20 @@ $ docker run -d \
 
 > Default server installation will be available on port 80.
 
+# Configuration File
+
+You can use your own configuration file which will override the auto-configuration feature of this image. Just mount your place your config file at the following location: `/home/nginx/nginx.conf`
+
+Example:
+
+~~~~
+$ docker run -d \
+    -v your_local_config_file.conf:/home/nginx/nginx.conf \
+    -p 80:8080 \
+    --name nginx \
+    blacklabelops/nginx
+~~~~
+
 # Reverse Proxy Setup
 
 ~~~~
