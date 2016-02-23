@@ -6,6 +6,10 @@ if [ -n "${DELAYED_START}" ]; then
   sleep ${DELAYED_START}
 fi
 
+if [ "${NGINX_REDIRECT_PORT80}" = "true" ]; then
+  source /opt/nginx-scripts/port_redirect.sh
+fi
+
 if [ ! -f "/home/nginx/nginx.conf" ]; then
   source /opt/nginx-scripts/create_config.sh
 fi
