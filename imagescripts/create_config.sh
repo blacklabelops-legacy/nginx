@@ -21,7 +21,19 @@ http {
     sendfile              on;
     tcp_nopush            on;
     tcp_nodelay           on;
-    client_max_body_size  100m;
+_EOF_
+
+nginx_upload_size='100m'
+
+if [ -n "${NGINX_MAX_UPLOAD_SIZE}" ]; then
+  nginx_upload_size=${NGINX_MAX_UPLOAD_SIZE}
+fi
+
+cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+    client_max_body_size  ${nginx_upload_size};
+_EOF_
+
+cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
     keepalive_timeout     65;
     types_hash_max_size   2048;
 
