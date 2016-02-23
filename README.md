@@ -1,18 +1,23 @@
-Multi purpose Docker image with Nginx.
+# Dockerized Nginx
 
-Major rewrite: The naming of the environment variables have been changed in order to support multiple servers and proxies. If you are using the old naming of environment variables then switch to the old version of this image on docherhub:
+[![Circle CI](https://circleci.com/gh/blacklabelops/jenkins/tree/master.svg?style=shield)](https://circleci.com/gh/blacklabelops/jenkins/tree/master) [![Docker Stars](https://img.shields.io/docker/stars/blacklabelops/jenkins.svg)](https://hub.docker.com/r/blacklabelops/jenkins/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacklabelops/jenkins.svg)](https://hub.docker.com/r/blacklabelops/jenkins/)
 
-~~~~
-blacklabelops/nginx:0.0.1
-~~~~
+## Supported tags and respective Dockerfile links
 
-Features:
+| Version     | Tag          | Dockerfile |
+|--------------|--------------|------------|
+| latest | latest | [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
+| 1.8.1-rc0 | 1.8.1 | [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
+
+# Features
 
 * Supports configuration of multiple servers with environment variables.
 * Supports an arbitrary amount of reverse proxies for every server.
 * Supports https and ad-hoc self-signed certificates
 * Supports ssl certificate specification for every server.
 * Supports letsencryt certificates.
+
+# Support & Feature Requests
 
 Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](https://www.hipchat.com/geogBFvEM)
 
@@ -173,16 +178,13 @@ You can get and use free green certificates by [Letsencrypt](https://letsencrypt
 
 Note: This will not work inside boot2docker on your local comp. You will have to do this inside your target environment.
 
-First start a data container where the certificate will be stored.
+First create a data volume where the certificate will be stored.
 
 ~~~~
-$ docker run -d \
-    -v /etc/letsencrypt \
-    --name letsencrypt_data \
-    blacklabelops/centos bash -c "chown -R 1000:1000 /etc/letsencrypt"
+$ docker volume create --name letsencrypt_certs
 ~~~~
 
-> Letsencrypt stores the certificates inside the folder /etc/letsencrypt.
+> Needs at least Docker 1.10 volumes.
 
 Then start the letsencrypt container and create the certificate.
 
@@ -191,28 +193,20 @@ $ docker run --rm \
     -p 80:80 \
     -p 443:443 \
     --name letsencrypt \
-    --volumes-from letsencrypt_data \
+    -v letsencrypt_certs:/etc/letsencrypt \
     -e "LETSENCRYPT_EMAIL=dummy@example.com" \
     -e "LETSENCRYPT_DOMAIN1=example.com" \
     blacklabelops/letsencrypt install
 ~~~~
 
-> This container will handshake with letsencrypt.org and install an account and the certificate when successful.
-
-Before we can use them you will have to set the appropriate permissions for the nginx user!
-
-~~~~
-$ docker start letsencrypt_data
-~~~~
-
-> The data container will repeat the instruction: chown -R 1000:1000 /etc/letsencrypt
+> This container will handshake with letsencrypt.org and install an account and the certificate when successful. Letsencrypt stores the certificates inside the folder /etc/letsencrypt.
 
 Now you can use the certificate for your reverse proxy!
 
 ~~~~
 $ docker run -d \
     -p 443:44300 \
-    --volumes-from letsencrypt_data \
+    -v letsencrypt_certs:/etc/letsencrypt \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
     -e "SERVER1HTTPS_ENABLED=true" \
