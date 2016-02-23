@@ -1,6 +1,6 @@
 # Dockerized Nginx
 
-[![Circle CI](https://circleci.com/gh/blacklabelops/jenkins/tree/master.svg?style=shield)](https://circleci.com/gh/blacklabelops/jenkins/tree/master) [![Docker Stars](https://img.shields.io/docker/stars/blacklabelops/jenkins.svg)](https://hub.docker.com/r/blacklabelops/jenkins/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacklabelops/jenkins.svg)](https://hub.docker.com/r/blacklabelops/jenkins/)
+[![Circle CI](https://circleci.com/gh/blacklabelops/nginx/tree/master.svg?style=shield)](https://circleci.com/gh/blacklabelops/nginx/tree/master) [![Docker Stars](https://img.shields.io/docker/stars/blacklabelops/nginx.svg)](https://hub.docker.com/r/blacklabelops/nginx/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacklabelops/nginx.svg)](https://hub.docker.com/r/blacklabelops/nginx/)
 
 ## Supported tags and respective Dockerfile links
 
