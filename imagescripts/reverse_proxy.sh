@@ -37,11 +37,6 @@ _EOF_
           proxy_pass ${NGINX_PROXY_PASS};
           proxy_redirect ${NGINX_PROXY_PASS} ${REVERSE_PROXY_REDIRECT_PATTERN};
           proxy_set_header X_FORWARDED_PROTO ${REVERSE_PROXY_PROTO_HEADER};
-_EOF_
-  fi
-
-  if [ -n "${NGINX_PROXY_HOST}" ]; then
-    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
           proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
