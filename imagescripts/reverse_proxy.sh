@@ -40,6 +40,7 @@ _EOF_
           proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-for ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
+          proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
           proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
           proxy_set_header Host ${REVERSE_PROXY_HOST_HEADER};
           port_in_redirect off;
