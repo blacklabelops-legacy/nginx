@@ -2,6 +2,8 @@
 
 set -o errexit
 
+NAMESERVER=$(cat /etc/resolv.conf | grep "nameserver" | awk '{print $2}' | tr '\n' ' ')
+
 cat > ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
 worker_processes auto;
 error_log /dev/stdout info;
@@ -21,6 +23,8 @@ http {
     sendfile              on;
     tcp_nopush            on;
     tcp_nodelay           on;
+
+    resolver ${NAMESERVER} ipv6=off valid=30s;
 _EOF_
 
 nginx_upload_size='100m'
