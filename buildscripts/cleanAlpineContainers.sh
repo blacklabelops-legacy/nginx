@@ -16,4 +16,4 @@ function cleanContainer() {
 }
 
 cleanContainer latest
-cleanContainer $TEST_JENKINS_VERSION
+cleanContainer $TEST_NGINX_VERSION
