@@ -11,8 +11,8 @@ function testImage() {
   local tagname=$1
   local port=$2
   local iteration=0
-  docker run -d -p $port:80 --name=$tagname blacklabelops/nginx:$tagname
-  while ! curl -v http://localhost:$port
+  docker run -d -p 80:80 --name=$tagname blacklabelops/nginx:$tagname
+  while ! curl -v http://localhost
   do
       { echo "Exit status of curl: $?"
         echo "Retrying ..."
