@@ -3,6 +3,7 @@
 set -o errexit
 
 NAMESERVER=$(cat /etc/resolv.conf | grep "nameserver" | tail -1 | awk '{print $2}' | tr '\n' ' ')
+LOG_FORMAT='$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"'
 
 cat > ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
 worker_processes auto;
@@ -13,9 +14,7 @@ events {
 }
 
 http {
-    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-                      '$status $body_bytes_sent "$http_referer" '
-                      '"$http_user_agent" "$http_x_forwarded_for"';
+    log_format  main  '${LOG_FORMAT}';
 
     access_log /dev/stdout;
 
