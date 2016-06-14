@@ -2,7 +2,7 @@
 
 set -o errexit
 
-NAMESERVER=$(cat /etc/resolv.conf | grep "nameserver" | awk '{print $2}' | tr '\n' ' ')
+NAMESERVER=$(cat /etc/resolv.conf | grep "nameserver" | tail -1 | awk '{print $2}' | tr '\n' ' ')
 
 cat > ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
 worker_processes auto;
