@@ -9,6 +9,6 @@ logioweb:
     - 'REVERSE_PROXY_BUFFERS='
     - 'REVERSE_PROXY_BUFFERS_SIZE='
   ports:
-    - '80:8080'
+    - '80:80'
   volumes:
     - '/opt/nginx'

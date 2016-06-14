@@ -4,6 +4,7 @@ set -o errexit
 
 for (( j = 1; ; j++ ))
 do
+  configFile=${NGINX_DIRECTORY}/conf.d/server${j}.conf
   VAR_TESTPASS="SERVER${j}REVERSE_PROXY_LOCATION1"
   VAR_NGINX_SERVER_NAME="SERVER${j}SERVER_NAME"
   VAR_NGINX_HTTP_ENABLED="SERVER${j}HTTP_ENABLED"
@@ -54,64 +55,60 @@ do
   NGINX_CERTIFICATE_DNAME=${!VAR_NGINX_CERTIFICATE_DNAME}
   NGINX_LETSENCRYPT_CERTIFICATES=${!VAR_LETSENCRYPT_CERTIFICATES}
 
-  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+  cat >> ${configFile} <<_EOF_
     server {
 _EOF_
 
   if [ "${NGINX_HTTP_ENABLED}" = 'true' ]; then
     if [ "${NGINX_SERVER_NAME}" = '_' ]; then
-      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
-        listen       8080 default_server;
-        listen       [::]:8080 default_server;
+      cat >> ${configFile} <<_EOF_
+        listen       80 default_server;
+        listen       [::]:80 default_server;
 _EOF_
     else
-      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
-        listen       8080;
-        listen       [::]:8080;
+      cat >> ${configFile} <<_EOF_
+        listen       80;
+        listen       [::]:80;
 _EOF_
     fi
   fi
 
   if [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
-    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
-        listen              44300 ssl;
+    cat >> ${configFile} <<_EOF_
+        listen              443 ssl;
         keepalive_timeout   70;
 _EOF_
   fi
 
-  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+  cat >> ${configFile} <<_EOF_
         server_name  ${NGINX_SERVER_NAME};
-
-        # Load configuration files for the default server block.
-        include /opt/nginx/default.d/server${j}/*.conf;
-
 _EOF_
 
   if [ -n "$NGINX_CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
     if [ ! -f "${NGINX_DIRECTORY}/keys/server.key" ]; then
       openssl req -subj "${NGINX_CERTIFICATE_DNAME}" -new -newkey rsa:4096 -days 365 -nodes -x509 -keyout ${NGINX_DIRECTORY}/keys/server.key -out ${NGINX_DIRECTORY}/keys/server.crt
     fi
-    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+    cat >> ${configFile} <<_EOF_
         ssl_certificate     ${NGINX_CERTIFICATE_FILE};
         ssl_certificate_key ${NGINX_CERTIFICATE_KEY};
 _EOF_
   fi
 
   if [ ! -n "$NGINX_CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
-    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+    cat >> ${configFile} <<_EOF_
         ssl_certificate     ${NGINX_CERTIFICATE_FILE};
         ssl_certificate_key ${NGINX_CERTIFICATE_KEY};
 _EOF_
   fi
 
   if [ -n "$NGINX_CERTIFICATE_TRUSTED" ]; then
-    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+    cat >> ${configFile} <<_EOF_
         ssl_trusted_certificate ${NGINX_CERTIFICATE_TRUSTED};
 _EOF_
   fi
 
   if [ -n "$NGINX_CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
-    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+    cat >> ${configFile} <<_EOF_
         ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
         ssl_ciphers         HIGH:!aNULL:!MD5;
 _EOF_
@@ -121,7 +118,7 @@ _EOF_
     if [ ! -f "/opt/nginx/dhparam.pem" ]; then
       openssl dhparam -out /home/nginx/dhparam.pem 2048
     fi
-    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+    cat >> ${configFile} <<_EOF_
         ssl_session_timeout 1d;
         ssl_session_cache shared:SSL:50m;
 
@@ -146,11 +143,14 @@ _EOF_
 _EOF_
   fi
 
-  source /opt/nginx-scripts/reverse_proxy.sh SERVER${j}
+  source $CUR_DIR/reverse_proxy.sh SERVER${j} ${j}
 
-  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+  cat >> ${configFile} <<_EOF_
+      # Load configuration files for the default server block.
+      include /opt/nginx/conf.d/server${j}/*.conf;
+      
     }
 
 _EOF_
-
+  cat ${configFile}
 done

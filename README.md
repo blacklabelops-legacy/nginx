@@ -1,13 +1,15 @@
 # Dockerized Nginx
 
-[![Circle CI](https://circleci.com/gh/blacklabelops/nginx/tree/master.svg?style=shield)](https://circleci.com/gh/blacklabelops/nginx/tree/master) [![Docker Stars](https://img.shields.io/docker/stars/blacklabelops/nginx.svg)](https://hub.docker.com/r/blacklabelops/nginx/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacklabelops/nginx.svg)](https://hub.docker.com/r/blacklabelops/nginx/)
+[![Docker Stars](https://img.shields.io/docker/stars/blacklabelops/nginx.svg)](https://hub.docker.com/r/blacklabelops/nginx/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacklabelops/nginx.svg)](https://hub.docker.com/r/blacklabelops/nginx/)
+
+## Important notice: The internal ports for this container changed from 8080 to 80 and 44300 to 443
 
 ## Supported tags and respective Dockerfile links
 
 | Version     | Tag          | Dockerfile |
 |--------------|--------------|------------|
 | latest | latest | [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
-| 1.8.1-rc0 | 1.8.1 | [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
+| 1.8.1-rc0 | 1.8.1-rc0 | [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
 
 # Features
 
@@ -25,7 +27,7 @@ Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](https://ww
 
 ~~~~
 $ docker run -d \
-    -p 80:8080 \
+    -p 80:80 \
     --name nginx \
     blacklabelops/nginx
 ~~~~
@@ -41,16 +43,30 @@ Example:
 ~~~~
 $ docker run -d \
     -v your_local_config_file.conf:/home/nginx/nginx.conf \
-    -p 80:8080 \
+    -p 80:80 \
     --name nginx \
     blacklabelops/nginx
 ~~~~
+
+You can also define a custom location for your configuration file!
+
+Example:
+
+~~~~
+$ docker run -d \
+    -v your_local_config_file.conf:/some/directory/nginx.conf \
+    -e "NGINX_CONFIG_FILE=/some/directory/nginx.conf" \
+    -p 80:80 \
+    --name nginx \
+    blacklabelops/nginx
+~~~~
+
 
 # Reverse Proxy Setup
 
 ~~~~
 $ docker run -d \
-    -p 80:8080 \
+    -p 80:80 \
     --name nginx \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
@@ -78,7 +94,7 @@ Server 2 Reverse Proxy 1:
 
 ~~~~
 $ docker run -d \
-    -p 80:8080 \
+    -p 80:80 \
     --name nginx \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
@@ -108,7 +124,7 @@ Reverse Proxy 2:
 
 ~~~~
 $ docker run -d \
-    -p 80:8080 \
+    -p 80:80 \
     --name nginx \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
@@ -135,8 +151,8 @@ This container supports HTTPS. Just enter a DName with the environment variable 
 
 ~~~~
 $ docker run -d \
-    -p 80:8080 \
-    -p 443:44300 \
+    -p 80:80 \
+    -p 443:443 \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
     -e "SERVER1CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
@@ -154,8 +170,8 @@ container define their location with the environment-variables CERTIFICATE_FILE 
 
 ~~~~
 $ docker run -d \
-    -p 80:8080 \
-    -p 443:44300 \
+    -p 80:80 \
+    -p 443:443 \
     -v /mycertificatepath/mycertificates:/opt/nginx/keys \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
@@ -174,7 +190,7 @@ Example:
 
 ~~~~
 $ docker run -d \
-    -p 44300:44300 \
+    -p 443:443 \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
     -e "SERVER1HTTPS_ENABLED=true" \
@@ -219,7 +235,7 @@ Now you can use the certificate for your reverse proxy!
 
 ~~~~
 $ docker run -d \
-    -p 443:44300 \
+    -p 443:443 \
     -v letsencrypt_certs:/etc/letsencrypt \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
@@ -309,7 +325,7 @@ Example:
 
 ~~~~
 $ docker run -d \
-    -p 80:8080 \
+    -p 80:80 \
     --name nginx \
     -v config.json:/home/nginx/config.json \
     blacklabelops/nginx

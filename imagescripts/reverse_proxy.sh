@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 set -o errexit
 
@@ -11,21 +11,21 @@ function setApplicationHeaders() {
 
   case "$applicationId" in
     confluence)
-      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
 _EOF_
       ;;
     jira)
-      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
 _EOF_
       ;;
     crowd)
-      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           proxy_set_header Host ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
           proxy_set_header X-Forwarded-for ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
@@ -33,7 +33,7 @@ _EOF_
 _EOF_
       ;;
     bitbucket)
-      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
@@ -41,7 +41,7 @@ _EOF_
 _EOF_
       ;;
     jenkins)
-      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           proxy_set_header Host ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
           proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
@@ -49,14 +49,14 @@ _EOF_
 _EOF_
       ;;
     crucible)
-      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           proxy_set_header Host ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
           proxy_set_header X-Forwarded-for ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
 _EOF_
       ;;
     *)
-      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           proxy_set_header X_FORWARDED_PROTO ${REVERSE_PROXY_PROTO_HEADER};
           proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
@@ -84,6 +84,9 @@ do
     break
   fi
 
+  configFileReverseProxy=${NGINX_DIRECTORY}/conf.d/server$2
+  mkdir -p ${configFileReverseProxy}
+
   NGINX_PROXY_LOCATION=${!VAR_REVERSE_PROXY_LOCATION}
   NGINX_PROXY_PASS=${!VAR_REVERSE_PROXY_PASS}
   NGINX_PROXY_BUFFERING=${!VAR_REVERSE_PROXY_BUFFERING}
@@ -93,7 +96,7 @@ do
   NGINX_PROXY_CONTAINER_NETWORK_DNS=${!VAR_PROXY_CONTAINER_NETWORK_DNS}
   NGINX_PROXY_APPLICATION=${!VAR_PROXY_APPLICATION}
 
-  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+  cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
         location ${NGINX_PROXY_LOCATION} {
 _EOF_
 
@@ -102,14 +105,14 @@ _EOF_
 
   if [ -n "${NGINX_PROXY_PASS}" ]; then
     if  [ "${NGINX_PROXY_CONTAINER_NETWORK_DNS}" = "true" ]; then
-      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           resolver 127.0.0.1 valid=30s;
           set ${REVERSE_PROXY_BACKEND} "${NGINX_PROXY_PASS}";
           proxy_pass ${REVERSE_PROXY_BACKEND};
           proxy_redirect ${NGINX_PROXY_PASS} ${REVERSE_PROXY_REDIRECT_PATTERN};
 _EOF_
     else
-      cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           proxy_pass ${NGINX_PROXY_PASS};
           proxy_redirect ${NGINX_PROXY_PASS} ${REVERSE_PROXY_REDIRECT_PATTERN};
 _EOF_
@@ -119,24 +122,25 @@ _EOF_
   fi
 
   if [ -n "${NGINX_PROXY_BUFFERING}" ]; then
-    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+    cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           proxy_buffering ${NGINX_PROXY_BUFFERING};
 _EOF_
   fi
 
   if [ -n "${NGINX_PROXY_BUFFERS}" ]; then
-    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+    cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           proxy_buffers ${NGINX_PROXY_BUFFERS};
 _EOF_
   fi
 
   if [ -n "${NGINX_PROXY_BUFFERS_SIZE}" ]; then
-    cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+    cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           proxy_buffer_size ${NGINX_PROXY_BUFFERS_SIZE};
 _EOF_
   fi
 
-  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+  cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
         }
 _EOF_
+  cat $configFileReverseProxy/reverseProxy.conf
 done

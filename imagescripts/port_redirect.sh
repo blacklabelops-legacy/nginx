@@ -4,13 +4,30 @@ set -o errexit
 
 NGINX_PORT_REDIRECT_PATTERN='https://$server_name$request_uri'
 
-cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+PORT_REDIRECT_FILE=${NGINX_DIRECTORY}/conf.d/portRedirect.conf
+
+for (( j = 1; ; j++ ))
+do
+  VAR_NGINX_SERVER_NAME="SERVER${j}SERVER_NAME"
+
+  if [ ! -n "${!VAR_NGINX_SERVER_NAME}" ]; then
+    break
+  fi
+
+  NGINX_SERVER_NAME="_"
+
+  if [ -n "${!VAR_NGINX_SERVER_NAME}" ]; then
+    NGINX_SERVER_NAME=${!VAR_NGINX_SERVER_NAME}
+  fi
+
+  cat >> ${PORT_REDIRECT_FILE} <<_EOF_
 
     server {
-       listen       8080 default_server;
-       listen       [::]:8080 default_server;
-       server_name  _;
+       listen       80;
+       server_name  ${NGINX_SERVER_NAME};
        return       301 ${NGINX_PORT_REDIRECT_PATTERN};
     }
 
 _EOF_
+  cat ${PORT_REDIRECT_FILE}
+done
