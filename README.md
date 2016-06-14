@@ -36,19 +36,7 @@ $ docker run -d \
 
 # Configuration File
 
-You can use your own configuration file which will override the auto-configuration feature of this image. Just mount your place your config file at the following location: `/home/nginx/nginx.conf`
-
-Example:
-
-~~~~
-$ docker run -d \
-    -v your_local_config_file.conf:/home/nginx/nginx.conf \
-    -p 80:80 \
-    --name nginx \
-    blacklabelops/nginx
-~~~~
-
-You can also define a custom location for your configuration file!
+You can use your own configuration file which will override the auto-configuration feature of this image.
 
 Example:
 
@@ -60,7 +48,6 @@ $ docker run -d \
     --name nginx \
     blacklabelops/nginx
 ~~~~
-
 
 # Reverse Proxy Setup
 
