@@ -30,4 +30,4 @@ function testImage() {
 }
 
 testPrintVersion $1
-# testImage $1 $2
+testImage $1 $2
