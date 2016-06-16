@@ -14,7 +14,7 @@ readonly PUSH_NGINX_VERSION=$NGINX_VERSION
 function retagImage() {
   local tagname=$1
   local repository=$2
-  docker tag -f blacklabelops/jenkins:$tagname $repository/blacklabelops/nginx:$tagname
+  docker tag -f blacklabelops/nginx:$tagname $repository/blacklabelops/nginx:$tagname
 }
 
 function pushImage() {
