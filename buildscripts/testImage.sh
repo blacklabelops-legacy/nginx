@@ -13,7 +13,7 @@ function testImage() {
   local iteration=0
 
   docker run -d -p $port:80 --name=$tagname blacklabelops/nginx:$tagname
-  docker exec $tagname -v
+  docker exec $tagname nginx -v
   docker logs $tagname
   docker rm -f $tagname
 }
