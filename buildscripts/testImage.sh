@@ -4,29 +4,40 @@ set -o errexit    # abort script at first error
 
 function testPrintVersion() {
   local tagname=$1
-  docker run --rm blacklabelops/nginx:$tagname -v
+  local branch=$(git rev-parse --abbrev-ref HEAD)
+  if  [ "${branch}" = "master" ]; then
+    imagename=$tagname
+  else
+    imagename=$tagname-$branch
+  fi
+  docker run --rm blacklabelops/nginx:$imagename -v
 }
 
 function testImage() {
   local tagname=$1
   local port=$2
   local iteration=0
-
-  docker run -d --name=$tagname blacklabelops/nginx:$tagname
-  while ! docker run --rm --link $tagname:nginx blacklabelops/nginx:$tagname curl -v http://nginx
+  local branch=$(git rev-parse --abbrev-ref HEAD)
+  if  [ "${branch}" = "master" ]; then
+    imagename=$tagname
+  else
+    imagename=$tagname-$branch
+  fi
+  docker run -d --name=$imagename blacklabelops/nginx:$imagename
+  while ! docker run --rm --link $imagename:nginx blacklabelops/nginx:$imagename curl -v http://nginx
   do
       { echo "Exit status of curl: $?"
         echo "Retrying ..."
       } 1>&2
       if [ "$iteration" = '30' ]; then
-        docker logs $tagname
+        docker logs $imagename
         exit 1
       else
         ((iteration=iteration+1))
       fi
       sleep 10
   done
-  docker rm -f $tagname
+  docker rm -f -v $imagename
 }
 
 testPrintVersion $1
