@@ -5,7 +5,7 @@ set -o errexit    # abort script at first error
 function buildImage() {
   local tagname=$1
   local version=$2
-  local branch=$(git rev-parse --abbrev-ref HEAD)
+  local branch=$(git symbolic-ref --short HEAD)
   if  [ "${branch}" = "master" ]; then
     imagename=$tagname
   else

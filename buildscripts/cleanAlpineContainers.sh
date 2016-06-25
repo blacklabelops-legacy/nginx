@@ -12,7 +12,7 @@ readonly TEST_NGINX_VERSION=$NGINX_VERSION
 
 function cleanContainer() {
   local container=$1
-  local branch=$(git rev-parse --abbrev-ref HEAD)
+  local branch=$(git symbolic-ref --short HEAD)
   if  [ "${branch}" = "master" ]; then
     imagename=$tagname
   else
