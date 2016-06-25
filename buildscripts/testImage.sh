@@ -4,7 +4,7 @@ set -o errexit    # abort script at first error
 
 function testPrintVersion() {
   local tagname=$1
-  local branch=$(git symbolic-ref --short HEAD)
+  local branch=$BUILD_BRANCH
   if  [ "${branch}" = "master" ]; then
     imagename=$tagname
   else
@@ -17,7 +17,7 @@ function testImage() {
   local tagname=$1
   local port=$2
   local iteration=0
-  local branch=$(git symbolic-ref --short HEAD)
+  local branch=$BUILD_BRANCH
   if  [ "${branch}" = "master" ]; then
     imagename=$tagname
   else
