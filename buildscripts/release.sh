@@ -3,4 +3,4 @@
 #------------------
 # CONTAINER VARIABLES
 #------------------
-export NGINX_VERSION=1.8.1-r0
+export NGINX_VERSION=1.10.1-r1
