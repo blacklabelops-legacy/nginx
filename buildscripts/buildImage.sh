@@ -9,7 +9,7 @@ function buildImage() {
   if  [ "${branch}" = "master" ]; then
     imagename=$tagname
   else
-    imagename=$tagname-$branch
+    imagename=$tagname-development
   fi
   docker build --no-cache -t blacklabelops/nginx:$imagename --build-arg NGINX_VERSION=$version .
 }

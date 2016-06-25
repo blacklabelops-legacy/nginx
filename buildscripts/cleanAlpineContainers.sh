@@ -16,7 +16,7 @@ function cleanContainer() {
   if  [ "${branch}" = "master" ]; then
     imagename=$tagname
   else
-    imagename=$tagname-$branch
+    imagename=$tagname-development
   fi
   docker rm -f -v $imagename || true
 }

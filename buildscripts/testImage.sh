@@ -8,7 +8,7 @@ function testPrintVersion() {
   if  [ "${branch}" = "master" ]; then
     imagename=$tagname
   else
-    imagename=$tagname-$branch
+    imagename=$tagname-development
   fi
   docker run --rm blacklabelops/nginx:$imagename -v
 }
@@ -21,7 +21,7 @@ function testImage() {
   if  [ "${branch}" = "master" ]; then
     imagename=$tagname
   else
-    imagename=$tagname-$branch
+    imagename=$tagname-development
   fi
   docker run -d --name=$imagename blacklabelops/nginx:$imagename
   while ! docker run --rm --link $imagename:nginx blacklabelops/nginx:$imagename curl -v http://nginx
