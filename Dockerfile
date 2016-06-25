@@ -29,8 +29,10 @@ RUN export CONTAINER_USER=nginx && \
     mkdir -p ${NGINX_DIRECTORY}/default.d && \
     mkdir -p ${NGINX_DIRECTORY}/conf.d && \
     mkdir -p ${NGINX_DIRECTORY}/keys && \
+    mkdir -p /var/run/nginx && \
     chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /var/log/nginx && \
     chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /var/lib/nginx && \
+    chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /var/run/nginx && \
     # Install Tini Zombie Reaper And Signal Forwarder
     export TINI_VERSION=0.9.0 && \
     export TINI_SHA=fa23d1e20732501c3bb8eeeca423c89ac80ed452 && \

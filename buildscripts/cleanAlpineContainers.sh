@@ -14,9 +14,9 @@ function cleanContainer() {
   local container=$1
   local branch=$BUILD_BRANCH
   if  [ "${branch}" = "master" ]; then
-    imagename=$tagname
+    imagename=$container
   else
-    imagename=$tagname-development
+    imagename=$container-development
   fi
   docker rm -f -v $imagename || true
 }
