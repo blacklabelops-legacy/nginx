@@ -106,7 +106,7 @@ _EOF_
   if [ -n "${NGINX_PROXY_PASS}" ]; then
     if  [ "${NGINX_PROXY_CONTAINER_NETWORK_DNS}" = "true" ]; then
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          resolver 127.0.0.1 valid=30s;
+          resolver ${NAMESERVER} ipv6=off valid=30s;
           set ${REVERSE_PROXY_BACKEND} "${NGINX_PROXY_PASS}";
           proxy_pass ${REVERSE_PROXY_BACKEND};
           proxy_redirect ${NGINX_PROXY_PASS} ${REVERSE_PROXY_REDIRECT_PATTERN};
