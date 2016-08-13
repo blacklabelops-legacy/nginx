@@ -115,7 +115,7 @@ _EOF_
   fi
 
   if [ "${NGINX_LETSENCRYPT_CERTIFICATES}" = 'true' ]; then
-    if [ ! -f "/opt/nginx/dhparam.pem" ]; then
+    if [ ! -f "/home/nginx/dhparam.pem" ]; then
       openssl dhparam -out /home/nginx/dhparam.pem 2048
     fi
     cat >> ${configFile} <<_EOF_
@@ -148,7 +148,7 @@ _EOF_
   cat >> ${configFile} <<_EOF_
       # Load configuration files for the default server block.
       include /opt/nginx/conf.d/server${j}/*.conf;
-      
+
     }
 
 _EOF_
