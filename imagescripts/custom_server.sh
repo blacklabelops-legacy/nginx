@@ -125,7 +125,7 @@ _EOF_
         # Diffie-Hellman parameter for DHE ciphersuites, recommended 2048 bits
         # Generate with:
         #   openssl dhparam -out /etc/nginx/dhparam.pem 2048
-        ssl_dhparam /opt/nginx/dhparam.pem;
+        ssl_dhparam /home/nginx/dhparam.pem;
 
         # What Mozilla calls "Intermediate configuration"
         # Copied from https://mozilla.github.io/server-side-tls/ssl-config-generator/
