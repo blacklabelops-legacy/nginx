@@ -76,7 +76,7 @@ _EOF_
   if [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
     cat >> ${configFile} <<_EOF_
         listen              443 ssl;
-        keepalive_timeout   70;
+        keepalive_timeout   0;
 _EOF_
   fi
 

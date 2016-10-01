@@ -77,7 +77,6 @@ do
   VAR_REVERSE_PROXY_BUFFERS="$1REVERSE_PROXY_BUFFERS$i"
   VAR_REVERSE_PROXY_BUFFERS_SIZE="$1REVERSE_PROXY_BUFFERS_SIZE$i"
   VAR_REVERSE_PROXY_HOST="$1SERVER_NAME"
-  VAR_PROXY_CONTAINER_NETWORK_DNS="$1PROXY_CONTAINER_NETWORK_DNS$i"
   VAR_PROXY_APPLICATION="$1PROXY_APPLICATION"
 
   if [ ! -n "${!VAR_REVERSE_PROXY_LOCATION}" ]; then
@@ -93,7 +92,6 @@ do
   NGINX_PROXY_BUFFERS=${!VAR_REVERSE_PROXY_BUFFERS}
   NGINX_PROXY_BUFFERS_SIZE=${!VAR_REVERSE_PROXY_BUFFERS_SIZE}
   NGINX_PROXY_HOST=${!VAR_REVERSE_PROXY_HOST}
-  NGINX_PROXY_CONTAINER_NETWORK_DNS=${!VAR_PROXY_CONTAINER_NETWORK_DNS}
   NGINX_PROXY_APPLICATION=${!VAR_PROXY_APPLICATION}
 
   cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
@@ -104,20 +102,11 @@ _EOF_
   REVERSE_PROXY_REDIRECT_PATTERN='$scheme://$host/'
 
   if [ -n "${NGINX_PROXY_PASS}" ]; then
-    if  [ "${NGINX_PROXY_CONTAINER_NETWORK_DNS}" = "true" ]; then
-      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          resolver ${NAMESERVER} ipv6=off valid=30s;
+    cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           set ${REVERSE_PROXY_BACKEND} "${NGINX_PROXY_PASS}";
           proxy_pass ${REVERSE_PROXY_BACKEND};
           proxy_redirect ${NGINX_PROXY_PASS} ${REVERSE_PROXY_REDIRECT_PATTERN};
 _EOF_
-    else
-      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_pass ${NGINX_PROXY_PASS};
-          proxy_redirect ${NGINX_PROXY_PASS} ${REVERSE_PROXY_REDIRECT_PATTERN};
-_EOF_
-    fi
-
     setApplicationHeaders $NGINX_PROXY_APPLICATION
   fi
 
