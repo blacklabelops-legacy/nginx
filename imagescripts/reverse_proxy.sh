@@ -55,6 +55,10 @@ _EOF_
           proxy_set_header X-Forwarded-for ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
 _EOF_
       ;;
+    custom)
+      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
+_EOF_
+      ;;
     *)
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           proxy_set_header X_FORWARDED_PROTO ${REVERSE_PROXY_PROTO_HEADER};
@@ -108,6 +112,23 @@ _EOF_
           proxy_redirect ${NGINX_PROXY_PASS} ${REVERSE_PROXY_REDIRECT_PATTERN};
 _EOF_
     setApplicationHeaders $NGINX_PROXY_APPLICATION
+
+    for (( j = 1; ; j++ ))
+    do
+      VAR_PROXY_HEADER_FIELD="$1REVERSE_PROXY_HEADER${i}FIELD${j}"
+
+      if [ ! -n "${!VAR_PROXY_HEADER_FIELD}" ]; then
+        break
+      fi
+
+      NGINX_PROXY_HEADER_FIELD=${!VAR_PROXY_HEADER_FIELD}
+
+      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
+          proxy_set_header ${NGINX_PROXY_HEADER_FIELD};
+_EOF_
+
+    done
+
   fi
 
   if [ -n "${NGINX_PROXY_BUFFERING}" ]; then

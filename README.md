@@ -206,6 +206,41 @@ $ docker run -d \
 
 > The reverse proxy will now only offer HTTPS communication!
 
+# Set Http Header Fields
+
+Applications, like Jira and Jenkins, usually need proxy header fields when you use nginx as a reverse proxy. You can set custom header fields when you use an application that is not directly supported by this image.
+
+As an example Jira reqires the following proxy header fields:
+
+1. `X-Forwarded-Host $host`
+1. `X-Forwarded-Server $host`
+1. `X-Forwarded-For $proxy_add_x_forwarded_for`
+
+This image supports an arbitrary amount of header fields, the environment variables must enumerated, starting with index 1.
+
+Syntax environment variable: `SERVER<server-number>REVERSE_PROXY_HEADER<proxy-number>FIELD<field-number>`
+
+> Note: You must set `SERVER1PROXY_APPLICATION=custom` to `custom` otherwise the container will add default header fields by itself.
+
+> Note: Inside docker and docker-compose the environment variable has to be quoted with `''` rather with `""`. This is also platform dependent, e.g. Mac and Linux. Please try and report how this behaves under Windows.
+
+Example with 1 server and 1 reverse proxy:
+
+~~~~
+$ docker run -d \
+    -p 80:80 \
+    --name nginx \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e 'SERVER1PROXY_APPLICATION=custom' \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://jira.example.com" \
+    -e 'SERVER1REVERSE_PROXY_HEADER1FIELD1=X-Forwarded-Host $host' \
+    -e 'SERVER1REVERSE_PROXY_HEADER1FIELD2=X-Forwarded-Server $host' \
+    -e 'SERVER1REVERSE_PROXY_HEADER1FIELD3=X-Forwarded-For $proxy_add_x_forwarded_for' \
+    blacklabelops/nginx
+~~~~
+
+> Use `''` quotes otherwise variables like `$host` will be interpreted!
+
 # Http2Https Redirection
 
 Means that a call on the http adress will be redirected to https. Useful when users enter the http adress in browser and then will be redirected to the secured entry page.
