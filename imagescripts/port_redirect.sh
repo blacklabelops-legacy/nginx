@@ -9,9 +9,9 @@ PORT_REDIRECT_FILE=${NGINX_DIRECTORY}/conf.d/portRedirect.conf
 cat > ${PORT_REDIRECT_FILE} <<_EOF_
 _EOF_
 
-for (( j = 1; ; j++ ))
+for (( x=1; ; x++ ))
 do
-  VAR_NGINX_SERVER_NAME="SERVER${j}SERVER_NAME"
+  VAR_NGINX_SERVER_NAME="SERVER${x}SERVER_NAME"
 
   if [ ! -n "${!VAR_NGINX_SERVER_NAME}" ]; then
     break

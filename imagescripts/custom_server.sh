@@ -2,7 +2,7 @@
 
 set -o errexit
 
-for (( j = 1; ; j++ ))
+for (( j=1; ; j++ ))
 do
   configFile=${NGINX_DIRECTORY}/conf.d/server${j}.conf
   VAR_TESTPASS="SERVER${j}REVERSE_PROXY_LOCATION1"
