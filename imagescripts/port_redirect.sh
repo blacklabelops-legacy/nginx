@@ -33,5 +33,6 @@ do
     }
 
 _EOF_
-  cat ${PORT_REDIRECT_FILE}
 done
+
+cat ${PORT_REDIRECT_FILE}
