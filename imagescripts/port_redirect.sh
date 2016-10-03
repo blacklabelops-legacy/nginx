@@ -6,6 +6,9 @@ NGINX_PORT_REDIRECT_PATTERN='https://$server_name$request_uri'
 
 PORT_REDIRECT_FILE=${NGINX_DIRECTORY}/conf.d/portRedirect.conf
 
+cat > ${PORT_REDIRECT_FILE} <<_EOF_
+_EOF_
+
 for (( j = 1; ; j++ ))
 do
   VAR_NGINX_SERVER_NAME="SERVER${j}SERVER_NAME"
@@ -24,6 +27,7 @@ do
 
     server {
        listen       80;
+       listen       [::]:80;
        server_name  ${NGINX_SERVER_NAME};
        return       301 ${NGINX_PORT_REDIRECT_PATTERN};
     }

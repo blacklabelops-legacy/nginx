@@ -11,7 +11,7 @@ fi
 
 nginx_main_config_file="/opt/nginx/nginx.conf"
 
-if [ "${NGINX_REDIRECT_PORT80}" = "true" ]; then
+if [ "${NGINX_REDIRECT_PORT80}" = 'true' ]; then
   source $CUR_DIR/port_redirect.sh
 fi
 

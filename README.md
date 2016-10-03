@@ -4,6 +4,23 @@
 
 ## Important notice: The internal ports for this container changed from 8080 to 80 and 44300 to 443
 
+## Important notice:
+
+Due to some changes you have to omit a last "/" in your URL inside the parameter "SERVERxREVERSE_PROXY_PASS1"
+
+Correct:
+
+~~~~
+-e "SERVER1REVERSE_PROXY_PASS1=http://www.example.com" \
+~~~~
+
+Incorrect:
+
+~~~~
+-e "SERVER1REVERSE_PROXY_PASS1=http://www.example.com/" \
+~~~~
+
+
 ## Supported tags and respective Dockerfile links
 
 | Version     | Tag          | Dockerfile |
@@ -188,6 +205,41 @@ $ docker run -d \
 ~~~~
 
 > The reverse proxy will now only offer HTTPS communication!
+
+# Http2Https Redirection
+
+Means that a call on the http adress will be redirected to https. Useful when users enter the http adress in browser and then will be redirected to the secured entry page.
+
+Example:
+
+1. Enter the URL `http://www.example.com`
+1. Your browser will be redirected to `https://www.example.com`
+
+This setting will be activated for all servers and all servers must deactivate http.
+
+Example:
+
+1. `NGINX_REDIRECT_PORT80=true` activates https port redirection for all servers.
+1. `SERVER1HTTP_ENABLED=false` must be set for all servers.
+
+Example:
+
+~~~~
+$ docker run -d \
+    -p 443:443 \
+    -p 80:80 \
+    -e "NGINX_REDIRECT_PORT80=true" \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1SERVER_NAME=localhost" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1HTTPS_ENABLED=true" \
+    -e "SERVER1CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
+    -e "SERVER1HTTP_ENABLED=false" \
+    --name nginx \
+    blacklabelops/nginx
+~~~~
+
+> You can now access http://localhost and https://localhost and http will be redirected to https.
 
 # Generating Green HTTPS Certificates with Letsencrypt
 
