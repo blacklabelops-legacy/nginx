@@ -8,6 +8,8 @@ function setApplicationHeaders() {
   local REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR='$proxy_add_x_forwarded_for'
   local REVERSE_PROXY_PROTO_HEADER='$scheme'
   local REVERSE_PROXY_UP_HEADER='$remote_addr'
+  local REVERSE_PROXY_UPGRADE='$http_upgrade'
+  local REVERSE_PROXY_CONNECTION_UPGRADE='$connection_upgrade'
 
   case "$applicationId" in
     confluence)
@@ -15,6 +17,16 @@ function setApplicationHeaders() {
           proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
           proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
+_EOF_
+      ;;
+    confluence6)
+      cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
+          proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
+          proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
+          proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade ${REVERSE_PROXY_UPGRADE};
+          proxy_set_header Connection ${REVERSE_PROXY_CONNECTION_UPGRADE};
 _EOF_
       ;;
     jira)
