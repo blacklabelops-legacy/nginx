@@ -2,25 +2,6 @@
 
 [![Docker Stars](https://img.shields.io/docker/stars/blacklabelops/nginx.svg)](https://hub.docker.com/r/blacklabelops/nginx/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacklabelops/nginx.svg)](https://hub.docker.com/r/blacklabelops/nginx/)
 
-## Important notice: The internal ports for this container changed from 8080 to 80 and 44300 to 443
-
-## Important notice:
-
-Due to some changes you have to omit a last "/" in your URL inside the parameter "SERVERxREVERSE_PROXY_PASS1"
-
-Correct:
-
-~~~~
--e "SERVER1REVERSE_PROXY_PASS1=http://www.example.com" \
-~~~~
-
-Incorrect:
-
-~~~~
--e "SERVER1REVERSE_PROXY_PASS1=http://www.example.com/" \
-~~~~
-
-
 ## Supported tags and respective Dockerfile links
 
 | Version     | Tag          | Dockerfile |
@@ -369,27 +350,6 @@ Build the latest release with docker-compose:
 ~~~~
 $ docker-compose build
 ~~~~
-
-# Container Permissions
-
-Simply: You can set user-id and group-id matching to a user and group from your host machine!
-
-Due to security considerations this image is not running in root mode! The Jenkins process user inside the container is `nginx` and the user's group is `nginx`. This project offers a simplified mechanism for user- and group-mapping. You can set the uid of the user and gid of the user's group during build time.
-
-The process permissions are relevant when using volumes and mounted folders from the host machine. NGINX need read and write permissions on the host machine. You can set UID and GID of the NGINX's process during build time! UID and GID should resemble credentials from your host machine.
-
-The following build arguments can be used:
-
-* CONTAINER_UID: Set the user-id of the process. (default: 1000)
-* CONTAINER_GID: Set the group-id of the process. (default: 1000)
-
-Example:
-
-~~~~
-$ docker build --build-arg CONTAINER_UID=2000 --build-arg CONTAINER_GID=2000 -t blacklabelops/nginx .
-~~~~
-
-> The container will write and read files with UID 2000 and GID 2000.
 
 # Use Your Own Config File
 
