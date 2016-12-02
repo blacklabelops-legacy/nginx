@@ -7,7 +7,7 @@
 | Version     | Tag          | Dockerfile |
 |--------------|--------------|------------|
 | latest | latest | [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
-| 1.8.1-rc0 | 1.8.1-rc0 | [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
+| 1.10.1-r1 | 1.10.1-r1| [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
 
 # Features
 
