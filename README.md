@@ -306,6 +306,44 @@ $ docker run -d \
 
 > LETSENCRYPT_CERTIFICATES switches on special configuration for their certificates.
 
+# Basic User Authentification
+
+You can password protect any reverse proxy. Additionally you can specify an arbitrary amount of users.
+
+Example of specifying a user `admin` with password `admin` for the first reverse proxy:
+
+~~~~
+docker run -d \
+    -p 80:80 \
+    --name nginx \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_BASIC_AUTH_REALM1=Secure Location" \
+    -e "SERVER1REVERSE_PROXY_BASIC_AUTH1USER1=admin" \
+    -e "SERVER1REVERSE_PROXY_BASIC_AUTH1PASSWORD1=admin" \
+    blacklabelops/nginx
+~~~~
+
+> Access to http://localhost will be now password protected with user `admin` and password `admin`.
+
+Multiple users:
+
+~~~~
+docker run -d \
+    -p 80:80 \
+    --name nginx \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_BASIC_AUTH_REALM1=Secure Location" \
+    -e "SERVER1REVERSE_PROXY_BASIC_AUTH1USER1=admin1" \
+    -e "SERVER1REVERSE_PROXY_BASIC_AUTH1PASSWORD1=admin1" \
+    -e "SERVER1REVERSE_PROXY_BASIC_AUTH1USER2=admin2" \
+    -e "SERVER1REVERSE_PROXY_BASIC_AUTH1PASSWORD2=admin2" \
+    blacklabelops/nginx
+~~~~
+
+> Access to http://localhost are both enabled for user `admin1` and user `admin2`.
+
 # Build The Image
 
 The build process can take the following argument:

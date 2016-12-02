@@ -19,7 +19,8 @@ RUN export CONTAINER_USER=nginx && \
     apk add --update \
       ca-certificates \
       curl \
-      openssl && \
+      openssl \
+      apache2-utils && \
     if  [ "${NGINX_VERSION}" = "latest" ]; \
       then apk add nginx ; \
       else apk add "nginx=${NGINX_VERSION}" ; \

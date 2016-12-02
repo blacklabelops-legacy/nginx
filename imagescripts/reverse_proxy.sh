@@ -99,6 +99,22 @@ _EOF_
   done
 }
 
+function createBasicAuthFile() {
+  local reverse_proxy_basic_auth_id=$1
+  local passwd_file=$2
+  for (( u=1; ; u++ ))
+  do
+    local VAR_BASIC_AUTH_USER="${reverse_proxy_basic_auth_id}USER${u}"
+    local VAR_BASIC_AUTH_PASSWORD="${reverse_proxy_basic_auth_id}PASSWORD${u}"
+    if [ ! -n "${!VAR_BASIC_AUTH_USER}" ]; then
+      break
+    fi
+    local BASIC_AUTH_USER="${!VAR_BASIC_AUTH_USER}"
+    local BASIC_AUTH_PASSWORD="${!VAR_BASIC_AUTH_PASSWORD}"
+    htpasswd -b $passwd_file $BASIC_AUTH_USER $BASIC_AUTH_PASSWORD
+  done
+}
+
 for (( i=1; ; i++ ))
 do
   VAR_REVERSE_PROXY_LOCATION="$1REVERSE_PROXY_LOCATION$i"
@@ -109,6 +125,7 @@ do
   VAR_REVERSE_PROXY_HOST="$1SERVER_NAME"
   VAR_PROXY_APPLICATION="$1PROXY_APPLICATION"
   VAR_PROXY_APPLICATION_PROXY="$1REVERSE_PROXY_APPLICATION$i"
+  VAR_REVERSE_PROXY_BASIC_AUTH_REALM="$1REVERSE_PROXY_BASIC_AUTH_REALM$i"
 
   if [ ! -n "${!VAR_REVERSE_PROXY_LOCATION}" ]; then
     break
@@ -125,6 +142,7 @@ do
   NGINX_PROXY_HOST=${!VAR_REVERSE_PROXY_HOST}
   NGINX_PROXY_APPLICATION=${!VAR_PROXY_APPLICATION}
   NGINX_PROXY_APPLICATION_PROXY=${!VAR_PROXY_APPLICATION_PROXY}
+  NGINX_PROXY_BASIC_AUTH_REALM=${!VAR_REVERSE_PROXY_BASIC_AUTH_REALM}
 
   if [ -n "${NGINX_PROXY_APPLICATION_PROXY}" ]; then
     NGINX_PROXY_APPLICATION=${NGINX_PROXY_APPLICATION_PROXY}
@@ -146,6 +164,16 @@ _EOF_
     setApplicationHeaders $NGINX_PROXY_APPLICATION
 
     setProxyHeaderFields
+  fi
+
+  if [ -n "${NGINX_PROXY_BASIC_AUTH_REALM}" ]; then
+    htpasswd_file=$configFileReverseProxy/htpasswd_reverse_proxy$i
+    touch $htpasswd_file
+    cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
+          auth_basic "${NGINX_PROXY_BASIC_AUTH_REALM}";
+          auth_basic_user_file ${htpasswd_file};
+_EOF_
+    createBasicAuthFile "$1REVERSE_PROXY_BASIC_AUTH${i}" $htpasswd_file
   fi
 
   if [ -n "${NGINX_PROXY_BUFFERING}" ]; then
