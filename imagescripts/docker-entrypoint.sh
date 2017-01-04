@@ -20,7 +20,7 @@ if [ ! -f ${nginx_main_config_file}  ]; then
 fi
 
 if [ "$1" = 'nginx' ]; then
-  exec nginx -c ${nginx_main_config_file} -g "daemon off;pid /var/run/nginx/nginx.pid;"
+  exec nginx -c ${nginx_main_config_file} -g "daemon off;"
 elif [[ "$1" == '-'* ]]; then
   exec nginx "$@"
 else
