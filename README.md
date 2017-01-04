@@ -291,7 +291,9 @@ Now you can use the certificate for your reverse proxy!
 ~~~~
 $ docker run -d \
     -p 443:443 \
+    -p 80:80 \
     -v letsencrypt_certs:/etc/letsencrypt \
+    -e "NGINX_REDIRECT_PORT80=true" \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
     -e "SERVER1HTTPS_ENABLED=true" \
@@ -305,6 +307,77 @@ $ docker run -d \
 ~~~~
 
 > LETSENCRYPT_CERTIFICATES switches on special configuration for their certificates.
+
+# Automated Letsencrypt Certificate renewal
+
+This image supports automatic monthly letsencrypt certificate renewal with side-containers. Ports 80 and 443 are used by Nginx, therefore we use webroot challenging for certificate renewal.
+
+After each renewal Nginx configuration and certificates are loaded without restarting Nginx itself and disturb the availability of the system.
+
+1. Create a challenge volume between your Letsencrypt and Nginx containers.
+1. Start Nginx container with the challenge volume.
+1. Start Letsencrypt container with challenge volume and webroot mode.
+1. Finally start a Cron container in order to reload your Nginx configuration after certificates changed.
+
+Create additional volume for acme handshakes:
+
+~~~~
+$ docker volume create letsencrypt_challenges
+~~~~
+
+> This is where acme challenges from letsencrypt are stored and handled by Nginx.
+
+Then start Nginx with your SSL settings and the challenge volume:
+
+~~~~
+$ docker run -d \
+    -p 443:443 \
+    -p 80:80 \
+    -v letsencrypt_certs:/etc/letsencrypt \
+    -v letsencrypt_challenges:/var/www/letsencrypt
+    -e "NGINX_REDIRECT_PORT80=true" \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1HTTPS_ENABLED=true" \
+    -e "SERVER1HTTP_ENABLED=false" \
+    -e "SERVER1LETSENCRYPT_CERTIFICATES=true" \
+    -e "SERVER1CERTIFICATE_FILE=/etc/letsencrypt/live/example.com/fullchain.pem" \
+    -e "SERVER1CERTIFICATE_KEY=/etc/letsencrypt/live/example.com/privkey.pem" \
+    -e "SERVER1CERTIFICATE_TRUSTED=/etc/letsencrypt/live/example.com/fullchain.pem" \
+    --name nginx \
+    blacklabelops/nginx
+~~~~
+
+> Nginx can now handle acme challenge tokens over the volume.
+
+Now start letsencrypt in renewal mode, this will renew certificates each month!
+
+~~~~
+$ docker run -d \
+    -v letsencrypt_certificates:/etc/letsencrypt \
+    -v letsencrypt_challenges:/var/www/letsencrypt \
+    -e "LETSENCRYPT_WEBROOT_MODE=true" \
+    -e "LETSENCRYPT_EMAIL=dummy@example.com" \
+    -e "LETSENCRYPT_DOMAIN1=example.com" \
+    --name letsencrypt \
+    blacklabelops/letsencrypt
+~~~~
+
+> This container will handshake with letsencrypt.org each month on the 15th and renewal the certificate when successful.
+
+Finally start a cron container that will reload the Nginx configuration after the certificates have been renewed!
+
+~~~~
+$ docker run -d \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -e "JOB_NAME1=ReloadNginx" \
+    -e "JOB_COMMAND1=docker exec nginx nginx -s reload" \
+    -e "JOB_TIME1=0 0 2 15 * *" \
+    -e "JOB_ON_ERROR1=Continue" \
+    blacklabelops/jobber:docker
+~~~~
+
+> Reloads Nginx configuration each month on the 15th over Docker without restarting Nginx! In order to achieve high availability!
 
 # Basic User Authentification
 

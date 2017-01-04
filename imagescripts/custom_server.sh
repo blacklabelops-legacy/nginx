@@ -140,7 +140,14 @@ _EOF_
         # fetch OCSP records from URL in ssl_certificate and cache them
         ssl_stapling on;
         ssl_stapling_verify on;
+
+        location ^~ /.well-known/acme-challenge/ {
+          default_type  "text/plain";
+          root          /var/www/letsencrypt;
+        }
+
 _EOF_
+        mkdir -p /var/www/letsencrypt
   fi
 
   source $CUR_DIR/reverse_proxy.sh SERVER${j} ${j}
