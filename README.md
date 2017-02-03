@@ -530,6 +530,10 @@ $ vagrant ssh
 
 Vagrant does not leave any docker artifacts on your beloved desktop and the vagrant image can simply be destroyed and repulled if anything goes wrong. Test my project to your heart's content!
 
+# Support
+
+Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](http://support.blacklabelops.com)
+
 ## References
 
 * [NGINX](http://nginx.org/)
