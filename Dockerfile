@@ -7,9 +7,11 @@ ARG NGINX_VERSION=latest
 #Permissions, set the linux user id and group id
 ARG CONTAINER_UID=1000
 ARG CONTAINER_GID=1000
+# Image Build Date By Buildsystem
+ARG BUILD_DATE=undefined
 
 # install dev tools
-ENV NGINX_DIRECTORY=/opt/nginx
+ENV NGINX_DIRECTORY=/etc/nginx
 
 RUN export CONTAINER_USER=nginx && \
     export CONTAINER_GROUP=nginx && \
@@ -25,6 +27,8 @@ RUN export CONTAINER_USER=nginx && \
       then apk add nginx ; \
       else apk add "nginx=${NGINX_VERSION}" ; \
     fi && \
+    rm -f /${NGINX_DIRECTORY}/nginx.conf && \
+    rm -rf ${NGINX_DIRECTORY}/conf.d ${NGINX_DIRECTORY}/default.d && \
     mkdir -p /var/log/nginx && \
     touch /var/log/nginx/error.log && \
     mkdir -p ${NGINX_DIRECTORY}/default.d && \
@@ -35,6 +39,12 @@ RUN export CONTAINER_USER=nginx && \
     chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /var/lib/nginx && \
     chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /run/nginx && \
     rm -rf /var/cache/apk/* && rm -rf /tmp/*
+
+# Image Metadata
+LABEL com.blacklabelops.application.nginx.version=$NGINX_VERSION \
+      com.blacklabelops.application.nginx.userid=$CONTAINER_UID \
+      com.blacklabelops.application.nginx.groupid=$CONTAINER_GID \
+      com.blacklabelops.image.builddate.nginx=${BUILD_DATE}
 
 EXPOSE 80 443
 

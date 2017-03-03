@@ -154,7 +154,7 @@ _EOF_
 
   cat >> ${configFile} <<_EOF_
       # Load configuration files for the default server block.
-      include /opt/nginx/conf.d/server${j}/*.conf;
+      include ${NGINX_DIRECTORY}/conf.d/server${j}/*.conf;
 
     }
 

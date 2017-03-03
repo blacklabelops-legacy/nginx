@@ -42,7 +42,7 @@ cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
     # Load modular configuration files from the /etc/nginx/conf.d directory.
     # See http://nginx.org/en/docs/ngx_core_module.html#include
     # for more information.
-    include /opt/nginx/conf.d/*.conf;
+    include ${NGINX_DIRECTORY}/conf.d/*.conf;
 
 _EOF_
 

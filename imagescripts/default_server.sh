@@ -10,7 +10,7 @@ cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
         root         /usr/share/nginx/html;
 
         # Load configuration files for the default server block.
-        include /opt/nginx/default.d/*.conf;
+        include ${NGINX_DIRECTORY}/default.d/*.conf;
 
         location / {
         }
