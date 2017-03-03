@@ -39,9 +39,6 @@ cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
     keepalive_timeout     65;
     types_hash_max_size   2048;
 
-    include             /etc/nginx/mime.types;
-    default_type        application/octet-stream;
-
     # Load modular configuration files from the /etc/nginx/conf.d directory.
     # See http://nginx.org/en/docs/ngx_core_module.html#include
     # for more information.
