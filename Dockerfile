@@ -34,18 +34,12 @@ RUN export CONTAINER_USER=nginx && \
     chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /var/log/nginx && \
     chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /var/lib/nginx && \
     chown -R $CONTAINER_UID:$CONTAINER_GID ${NGINX_DIRECTORY} /run/nginx && \
-    # Install Tini Zombie Reaper And Signal Forwarder
-    export TINI_VERSION=0.9.0 && \
-    export TINI_SHA=fa23d1e20732501c3bb8eeeca423c89ac80ed452 && \
-    curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static -o /bin/tini && \
-    echo 'Calculated checksum: '$(sha1sum /bin/tini) && \
-    chmod +x /bin/tini && echo "$TINI_SHA  /bin/tini" | sha1sum -c - && \
     rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 EXPOSE 80 443
 
 USER root
 COPY imagescripts/*.sh /opt/nginx/
-ENTRYPOINT ["/bin/tini","--","/opt/nginx/docker-entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini","--","/opt/nginx/docker-entrypoint.sh"]
 VOLUME ["/home/nginx"]
 CMD ["nginx"]
