@@ -152,14 +152,13 @@ do
         location ${NGINX_PROXY_LOCATION} {
 _EOF_
 
-  REVERSE_PROXY_BACKEND='$backend'
-  REVERSE_PROXY_REDIRECT_PATTERN='$scheme://$host/'
+  REVERSE_PROXY_BACKEND_VARIABLE='$backend'
+  REVERSE_PROXY_BACKEND='$backend$uri$is_args$args'
 
   if [ -n "${NGINX_PROXY_PASS}" ]; then
     cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          set ${REVERSE_PROXY_BACKEND} "${NGINX_PROXY_PASS}";
+          set ${REVERSE_PROXY_BACKEND_VARIABLE} "${NGINX_PROXY_PASS}";
           proxy_pass ${REVERSE_PROXY_BACKEND};
-          proxy_redirect ${NGINX_PROXY_PASS} ${REVERSE_PROXY_REDIRECT_PATTERN};
 _EOF_
     setApplicationHeaders $NGINX_PROXY_APPLICATION
 
