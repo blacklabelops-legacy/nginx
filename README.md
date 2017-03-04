@@ -7,7 +7,7 @@
 | Version     | Tag          | Dockerfile |
 |--------------|--------------|------------|
 | latest | latest | [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
-| 1.10.1-r1 | 1.10.1-r1| [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
+| 1.2 | 1.2 | [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
 
 # Features
 
@@ -40,8 +40,7 @@ Example:
 
 ~~~~
 $ docker run -d \
-    -v your_local_config_file.conf:/some/directory/nginx.conf \
-    -e "NGINX_CONFIG_FILE=/some/directory/nginx.conf" \
+    -v your_local_config_file.conf:/etc/nginx/nginx.conf \
     -p 80:80 \
     --name nginx \
     blacklabelops/nginx
@@ -462,52 +461,44 @@ Build the latest release with docker-compose:
 $ docker-compose build
 ~~~~
 
-# Use Your Own Config File
-
-Just mount or place your file at the position `/home/nginx/config.json`!
-
-Example:
-
-~~~~
-$ docker run -d \
-    -p 80:80 \
-    --name nginx \
-    -v config.json:/home/nginx/config.json \
-    blacklabelops/nginx
-~~~~
-
-> File config.json is your local configuration file.
-
 # How To Extend This Image
 
-Minimal working example Dockerfile:
+Minimal working example:
 
 ~~~~
 FROM blacklabelops/nginx
-MAINTAINER Your Name <your@email.com>
+
+RUN echo "Install Your Tools"
+
+# Optional: Your config file
+COPY nginx.conf /etc/nginx/nginx.conf
+~~~~
+
+Example with custom entrypoint:
+
+~~~~
+FROM blacklabelops/nginx
 
 USER root
 RUN echo "Install Your Tools"
 
-USER nginx
 # Optional: Your config file
-COPY config.json /home/nginx/config.json
+COPY nginx.conf /etc/nginx/nginx.conf
 # Optional: Your entrypoint:
-COPY entrypoint.sh /opt/nginx-scripts/
-ENTRYPOINT ["/opt/nginx-scripts/entrypoint.sh"]
-CMD ["nginx"]
+COPY entrypoint.sh /opt/nginx/
+ENTRYPOINT ["/opt/nginx/entrypoint.sh"]
 ~~~~
 
 Minimal working example entrypoint `entrypoint.sh`:
 
 ~~~~
-#!/bin/bash -x
+#!/bin/bash
 
 # Your code
-echo My script code
+echo "My script code"
 
 # Then call image entrypoint
-exec /opt/nginx-scripts/docker-entrypoint.sh
+exec /opt/nginx/docker-entrypoint.sh
 ~~~~
 
 # Support
