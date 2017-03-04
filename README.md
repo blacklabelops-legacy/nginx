@@ -301,7 +301,7 @@ $ docker run -d \
     -e "SERVER1HTTPS_ENABLED=true" \
     -e "SERVER1HTTP_ENABLED=false" \
     -e "SERVER1LETSENCRYPT_CERTIFICATES=true" \
-    -e "SERVER1CERTIFICATE_FILE=/etc/letsencrypt/live/example.com/fullchain.pem" \
+    -e "SERVER1CERTIFICATE_FILE=/etc/letsencrypt/live/example.com/cert.pem" \
     -e "SERVER1CERTIFICATE_KEY=/etc/letsencrypt/live/example.com/privkey.pem" \
     -e "SERVER1CERTIFICATE_TRUSTED=/etc/letsencrypt/live/example.com/fullchain.pem" \
     --name nginx \
@@ -343,7 +343,7 @@ $ docker run -d \
     -e "SERVER1HTTPS_ENABLED=true" \
     -e "SERVER1HTTP_ENABLED=false" \
     -e "SERVER1LETSENCRYPT_CERTIFICATES=true" \
-    -e "SERVER1CERTIFICATE_FILE=/etc/letsencrypt/live/example.com/fullchain.pem" \
+    -e "SERVER1CERTIFICATE_FILE=/etc/letsencrypt/live/example.com/cert.pem" \
     -e "SERVER1CERTIFICATE_KEY=/etc/letsencrypt/live/example.com/privkey.pem" \
     -e "SERVER1CERTIFICATE_TRUSTED=/etc/letsencrypt/live/example.com/fullchain.pem" \
     --name nginx \
@@ -356,7 +356,7 @@ Now start letsencrypt in renewal mode, this will renew certificates each month!
 
 ~~~~
 $ docker run -d \
-    -v letsencrypt_certificates:/etc/letsencrypt \
+    -v letsencrypt_certs:/etc/letsencrypt \
     -v letsencrypt_challenges:/var/www/letsencrypt \
     -e "LETSENCRYPT_WEBROOT_MODE=true" \
     -e "LETSENCRYPT_EMAIL=dummy@example.com" \
