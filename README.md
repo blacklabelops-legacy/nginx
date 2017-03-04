@@ -18,7 +18,7 @@
 * Supports an arbitrary amount of reverse proxies for every server.
 * Supports https and ad-hoc self-signed certificates
 * Supports ssl certificate specification for every server.
-* Supports letsencryt certificates.
+* Supports letsencrypt certificates.
 
 # Support & Feature Requests
 
@@ -86,8 +86,8 @@ $ docker run -d \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
     -e "SERVER2SERVER_NAME=dummy.example.com"
-    -e "SERVER2REVERSE_PROXY_LOCATION2=/alternate" \
-    -e "SERVER2REVERSE_PROXY_PASS2=http://www.alternate.de" \
+    -e "SERVER2REVERSE_PROXY_LOCATION1=/alternate" \
+    -e "SERVER2REVERSE_PROXY_PASS1=http://www.alternate.de" \
     blacklabelops/nginx
 ~~~~
 
