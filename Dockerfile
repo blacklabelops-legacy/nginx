@@ -1,5 +1,4 @@
 FROM blacklabelops/alpine:3.5
-MAINTAINER Steffen Bleul <sbl@blacklabelops.com>
 
 # Build time arguments
 #Values: latest or version number (e.g. 1.8.1-r0)
@@ -51,5 +50,5 @@ EXPOSE 80 443
 USER root
 COPY imagescripts/*.sh /opt/nginx/
 ENTRYPOINT ["/sbin/tini","--","/opt/nginx/docker-entrypoint.sh"]
-VOLUME ["/home/nginx"]
+VOLUME ["/home/nginx","/var/log/nginx"]
 CMD ["nginx"]
