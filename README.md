@@ -4,10 +4,10 @@
 
 ## Supported tags and respective Dockerfile links
 
-| Version     | Tag          | Dockerfile |
-|--------------|--------------|------------|
+| Nginx Version     | Tag          | Dockerfile |
+|-------------------|--------------|------------|
 | latest | latest | [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
-| 1.2 | 1.2 | [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
+| 1.10.3-r0 | 1.2 | [Dockerfile](https://github.com/blacklabelops/nginx/blob/master/Dockerfile) |
 
 # Features
 
@@ -19,7 +19,7 @@
 
 # Support & Feature Requests
 
-Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](https://www.hipchat.com/geogBFvEM)
+Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](http://support.blacklabelops.com)
 
 # Make It Short!
 
@@ -500,10 +500,6 @@ echo "My script code"
 # Then call image entrypoint
 exec /opt/nginx/docker-entrypoint.sh
 ~~~~
-
-# Support
-
-Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](http://support.blacklabelops.com)
 
 ## References
 
