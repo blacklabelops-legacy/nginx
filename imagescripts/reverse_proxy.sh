@@ -88,7 +88,7 @@ _EOF_
 function setProxyHeaderFields() {
   for (( q=1; ; q++ ))
   do
-    VAR_PROXY_HEADER_FIELD="$1REVERSE_PROXY_HEADER${i}FIELD${q}"
+    VAR_PROXY_HEADER_FIELD="$1REVERSE_PROXY_HEADER$2FIELD$q"
     if [ ! -n "${!VAR_PROXY_HEADER_FIELD}" ]; then
       break
     fi
@@ -162,7 +162,7 @@ _EOF_
 _EOF_
     setApplicationHeaders $NGINX_PROXY_APPLICATION
 
-    setProxyHeaderFields
+    setProxyHeaderFields $1 $i
   fi
 
   if [ -n "${NGINX_PROXY_BASIC_AUTH_REALM}" ]; then
