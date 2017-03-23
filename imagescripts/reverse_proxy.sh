@@ -99,16 +99,16 @@ _EOF_
   done
 }
 
-function setProxyHeaderDirectives() {
+function setProxyDirectiveFields() {
   for (( d=1; ; d++ ))
   do
-    VAR_PROXY_HEADER_DIRECTIVE="$1REVERSE_PROXY_HEADER$2DIRECTIVE$d"
-    if [ ! -n "${!VAR_PROXY_HEADER_DIRECTIVE}" ]; then
+    VAR_PROXY_DIRECTIVE_FIELD="$1REVERSE_PROXY_DIRECTIVE$2FIELD$d"
+    if [ ! -n "${!VAR_PROXY_DIRECTIVE_FIELD}" ]; then
       break
     fi
-    NGINX_PROXY_HEADER_DIRECTIVE=${!VAR_PROXY_HEADER_DIRECTIVE}
+    NGINX_PROXY_DIRECTIVE_FIELD=${!VAR_PROXY_DIRECTIVE_FIELD}
     cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          ${NGINX_PROXY_HEADER_DIRECTIVE};
+          ${NGINX_PROXY_DIRECTIVE_FIELD};
 _EOF_
   done
 }
@@ -178,7 +178,7 @@ _EOF_
 
     setProxyHeaderFields $1 $i
 
-    setProxyHeaderDirectives $1 $i
+    setProxyDirectiveFields $1 $i
   fi
 
   if [ -n "${NGINX_PROXY_BASIC_AUTH_REALM}" ]; then

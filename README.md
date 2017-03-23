@@ -203,9 +203,11 @@ This image supports an arbitrary amount of header fields, the environment variab
 
 Syntax environment variable: `SERVER<server-number>REVERSE_PROXY_HEADER<proxy-number>FIELD<field-number>`
 
+You can also provide custom Nginx directives using a similar pattern: `SERVER<server-number>REVERSE_PROXY_DIRECTIVE<proxy-number>FIELD<field-number>`
+
 > Note: You must set `SERVER1PROXY_APPLICATION=custom` to `custom` otherwise the container will add default header fields by itself.
 
-> Note: Inside docker and docker-compose the environment variable has to be quoted with `''` rather with `""`. This is also platform dependent, e.g. Mac and Linux. Please try and report how this behaves under Windows.
+> Note: Inside docker and docker-compose the environment variable has to be quoted with `''` rather with `""`. Alternatively a `$` symbol can be substituted with `$$` when not using single quotes. This is also platform dependent, e.g. Mac and Linux. Please try and report how this behaves under Windows.
 
 Example with 1 server and 1 reverse proxy:
 
@@ -219,10 +221,11 @@ $ docker run -d \
     -e 'SERVER1REVERSE_PROXY_HEADER1FIELD1=X-Forwarded-Host $host' \
     -e 'SERVER1REVERSE_PROXY_HEADER1FIELD2=X-Forwarded-Server $host' \
     -e 'SERVER1REVERSE_PROXY_HEADER1FIELD3=X-Forwarded-For $proxy_add_x_forwarded_for' \
+    -e 'SERVER1REVERSE_PROXY_DIRECTIVE1FIELD1=proxy_read_timeout 300' \
     blacklabelops/nginx
 ~~~~
 
-> Use `''` quotes otherwise variables like `$host` will be interpreted!
+> Use `''`, `$$`, or quotes otherwise variables like `$host` will be interpreted!
 
 # Http2Https Redirection
 
