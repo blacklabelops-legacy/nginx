@@ -99,6 +99,20 @@ _EOF_
   done
 }
 
+function setProxyHeaderDirectives() {
+  for (( d=1; ; d++ ))
+  do
+    VAR_PROXY_HEADER_DIRECTIVE="$1REVERSE_PROXY_HEADER$2DIRECTIVE$d"
+    if [ ! -n "${!VAR_PROXY_HEADER_DIRECTIVE}" ]; then
+      break
+    fi
+    NGINX_PROXY_HEADER_DIRECTIVE=${!VAR_PROXY_HEADER_DIRECTIVE}
+    cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
+          ${NGINX_PROXY_HEADER_DIRECTIVE};
+_EOF_
+  done
+}
+
 function createBasicAuthFile() {
   local reverse_proxy_basic_auth_id=$1
   local passwd_file=$2
@@ -163,6 +177,8 @@ _EOF_
     setApplicationHeaders $NGINX_PROXY_APPLICATION
 
     setProxyHeaderFields $1 $i
+
+    setProxyHeaderDirectives $1 $i
   fi
 
   if [ -n "${NGINX_PROXY_BASIC_AUTH_REALM}" ]; then
