@@ -11,12 +11,11 @@ fi
 
 nginx_main_config_file=${NGINX_DIRECTORY}"/nginx.conf"
 
-if [ "${NGINX_REDIRECT_PORT80}" = 'true' ]; then
-  source $CUR_DIR/port_redirect.sh
-fi
-
 if [ ! -f ${nginx_main_config_file}  ]; then
   rm -rf ${NGINX_DIRECTORY}/conf.d/*
+  if [ "${NGINX_REDIRECT_PORT80}" = 'true' ]; then
+    source $CUR_DIR/port_redirect.sh
+  fi
   source $CUR_DIR/create_config.sh
 fi
 
