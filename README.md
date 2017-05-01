@@ -85,7 +85,7 @@ $ docker run -d \
     --name nginx \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
-    -e "SERVER2SERVER_NAME=dummy.example.com"
+    -e "SERVER2SERVER_NAME=dummy.example.com" \
     -e "SERVER2REVERSE_PROXY_LOCATION1=/alternate" \
     -e "SERVER2REVERSE_PROXY_PASS1=http://www.alternate.de" \
     blacklabelops/nginx
@@ -339,7 +339,7 @@ $ docker run -d \
     -p 443:443 \
     -p 80:80 \
     -v letsencrypt_certs:/etc/letsencrypt \
-    -v letsencrypt_challenges:/var/www/letsencrypt
+    -v letsencrypt_challenges:/var/www/letsencrypt \
     -e "NGINX_REDIRECT_PORT80=true" \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
