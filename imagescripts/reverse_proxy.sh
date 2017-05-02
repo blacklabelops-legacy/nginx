@@ -211,5 +211,7 @@ _EOF_
   cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
         }
 _EOF_
-  cat $configFileReverseProxy/reverseProxy.conf
+
+  # debug output
+  # cat $configFileReverseProxy/reverseProxy.conf
 done

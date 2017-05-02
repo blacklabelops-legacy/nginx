@@ -56,4 +56,5 @@ cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
 }
 _EOF_
 
-cat ${NGINX_DIRECTORY}/nginx.conf
+# debug output
+#cat ${NGINX_DIRECTORY}/nginx.conf

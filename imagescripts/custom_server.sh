@@ -159,5 +159,7 @@ _EOF_
     }
 
 _EOF_
-  cat ${configFile}
+
+  # debug output
+  # cat ${configFile}
 done

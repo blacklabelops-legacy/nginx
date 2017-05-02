@@ -22,7 +22,7 @@ fi
 if [ "$1" = 'nginx' ]; then
   exec nginx -g "daemon off;"
 elif [[ "$1" == '-'* ]]; then
-  exec nginx "$@"
+  exec nginx -g "daemon off;" "$@"
 else
   exec "$@"
 fi

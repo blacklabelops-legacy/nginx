@@ -35,4 +35,5 @@ do
 _EOF_
 done
 
-cat ${PORT_REDIRECT_FILE}
+# debug output
+# cat ${PORT_REDIRECT_FILE}
