@@ -11,4 +11,4 @@ logioweb:
   ports:
     - '80:80'
   volumes:
-    - '/opt/nginx'
+    - '/home/nginx'

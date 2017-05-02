@@ -268,10 +268,18 @@ You can get and use free green certificates by [Letsencrypt](https://letsencrypt
 
 Note: This will not work inside boot2docker on your local comp. You will have to do this inside your target environment.
 
+Note: Every time you start a new container, the container has to generate it's Diffie-Hellman parameter for DHE ciphersuites for secure https encryption. This takes some minutes. Add the following volume `/home/nginx` (also included in examples) in your docker run command to reuse the last generated Diffie-Hellman parameter.
+
 First create a data volume where the certificate will be stored.
 
 ~~~~
 $ docker volume create --name letsencrypt_certs
+~~~~
+
+Secondly, create a data volume for the Diffie-Hellman parameter for DHE ciphersuites.
+
+~~~~
+$ docker volume create --name diffiehellman_parameter
 ~~~~
 
 > Needs at least Docker 1.10 volumes.
@@ -284,6 +292,7 @@ $ docker run --rm \
     -p 443:443 \
     --name letsencrypt \
     -v letsencrypt_certs:/etc/letsencrypt \
+    -v diffiehellman_parameter:/home/nginx \
     -e "LETSENCRYPT_EMAIL=dummy@example.com" \
     -e "LETSENCRYPT_DOMAIN1=example.com" \
     blacklabelops/letsencrypt install
@@ -298,6 +307,7 @@ $ docker run -d \
     -p 443:443 \
     -p 80:80 \
     -v letsencrypt_certs:/etc/letsencrypt \
+    -v diffiehellman_parameter:/home/nginx \
     -e "NGINX_REDIRECT_PORT80=true" \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
@@ -340,6 +350,7 @@ $ docker run -d \
     -p 80:80 \
     -v letsencrypt_certs:/etc/letsencrypt \
     -v letsencrypt_challenges:/var/www/letsencrypt \
+    -v diffiehellman_parameter:/home/nginx \
     -e "NGINX_REDIRECT_PORT80=true" \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \

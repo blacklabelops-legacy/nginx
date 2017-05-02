@@ -50,5 +50,4 @@ EXPOSE 80 443
 USER root
 COPY imagescripts/*.sh /opt/nginx/
 ENTRYPOINT ["/sbin/tini","--","/opt/nginx/docker-entrypoint.sh"]
-VOLUME ["/home/nginx"]
 CMD ["nginx"]
