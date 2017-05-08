@@ -43,7 +43,9 @@ RUN export CONTAINER_USER=nginx && \
 LABEL com.blacklabelops.application.nginx.version=$NGINX_VERSION \
       com.blacklabelops.application.nginx.userid=$CONTAINER_UID \
       com.blacklabelops.application.nginx.groupid=$CONTAINER_GID \
-      com.blacklabelops.image.builddate.nginx=${BUILD_DATE}
+      com.blacklabelops.image.builddate.nginx=${BUILD_DATE} \
+      com.blacklabelops.image.name.nginx=nginx-base-image \
+      
 
 EXPOSE 80 443
 
