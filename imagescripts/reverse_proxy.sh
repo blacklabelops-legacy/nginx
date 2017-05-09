@@ -166,7 +166,7 @@ do
 _EOF_
 
   REVERSE_PROXY_BACKEND_VARIABLE='$backend'
-  REVERSE_PROXY_BACKEND='$backend$request_uri$is_args$args'
+  REVERSE_PROXY_BACKEND='$backend$request_uri'
 
   if [ -n "${NGINX_PROXY_PASS}" ]; then
     cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
