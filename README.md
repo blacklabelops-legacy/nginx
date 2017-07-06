@@ -384,7 +384,7 @@ $ docker run -d \
 
 > Reloads Nginx configuration each month on the 15th over Docker without restarting Nginx! In order to achieve high availability!
 
-# Basic User Authentification
+# Basic User Authentication
 
 You can password protect any reverse proxy. Additionally you can specify an arbitrary amount of users.
 
@@ -421,6 +421,21 @@ docker run -d \
 ~~~~
 
 > Access to http://localhost are both enabled for user `admin1` and user `admin2`.
+
+# Changing Log Level and disabling the Access Log
+
+If you find the access log output too verbose, it can be disabled.
+
+~~~~
+$ docker run -d \
+    -p 80:80 \
+    --name nginx \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "LOG_LEVEL=warn" \
+    -e "DISABLE_ACCESS_LOG=true" \
+    blacklabelops/nginx
+~~~~
 
 # Build The Image
 
