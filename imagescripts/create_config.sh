@@ -5,9 +5,18 @@ set -o errexit
 NAMESERVER=$(cat /etc/resolv.conf | grep "nameserver" | tail -1 | awk '{print $2}' | tr '\n' ' ')
 LOG_FORMAT='$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"'
 
+if [ -z "${LOG_LEVEL}" ]; then
+    LOG_LEVEL=info
+fi
+
+ACCESS_LOG=/dev/stdout
+if [ "${DISABLE_ACCESS_LOG}" == 'true' ]; then
+    ACCESS_LOG=off
+fi
+
 cat > ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
 worker_processes auto;
-error_log /dev/stdout info;
+error_log /dev/stdout ${LOG_LEVEL};
 
 events {
     worker_connections 1024;
@@ -16,7 +25,7 @@ events {
 http {
     log_format  main  '${LOG_FORMAT}';
 
-    access_log /dev/stdout;
+    access_log ${ACCESS_LOG};
 
     sendfile              on;
     tcp_nopush            on;
