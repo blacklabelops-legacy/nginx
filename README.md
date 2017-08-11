@@ -455,7 +455,7 @@ $ docker run -d \
 
 If you want to pass requests to the Docker host, you need to connect the NGINX container directly to the host networking stack.
 
-Unfortunately, if your Docker host is running on a QNAP NAS, port 80 and 443 are already used by the embedded web server. You can use custom ports in such a case.
+Unfortunately, if your Docker host is running on a QNAP NAS, port 80 and 443 (as well as 8080 and 8081) are already used by the embedded web server. You can use custom ports in such a case.
 
 ~~~~
 $ docker run -d \
