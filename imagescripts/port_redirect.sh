@@ -2,6 +2,12 @@
 
 set -o errexit
 
+nginx_use_ipv6="false"
+
+if [ -n "${NGINX_IPV6_ENABLED}" ]; then
+  nginx_use_ipv6=${NGINX_IPV6_ENABLED}
+fi
+
 NGINX_PORT_REDIRECT_PATTERN='https://$server_name$request_uri'
 
 PORT_REDIRECT_FILE=${NGINX_DIRECTORY}/conf.d/portRedirect.conf
@@ -25,12 +31,23 @@ do
 
   cat >> ${PORT_REDIRECT_FILE} <<_EOF_
 
-    server {
-       listen       80;
-       listen       [::]:80;
-       server_name  ${NGINX_SERVER_NAME};
-       return       301 ${NGINX_PORT_REDIRECT_PATTERN};
-    }
+  server {
+_EOF_
+
+  if [ "${nginx_use_ipv6}" = 'true' ]; then
+    cat >> ${PORT_REDIRECT_FILE} <<_EOF_
+      listen       [::]:80;
+_EOF_
+  else
+    cat >> ${PORT_REDIRECT_FILE} <<_EOF_
+      listen       80;
+_EOF_
+  fi
+
+  cat >> ${PORT_REDIRECT_FILE} <<_EOF_
+      server_name  ${NGINX_SERVER_NAME};
+      return       301 ${NGINX_PORT_REDIRECT_PATTERN};
+  }
 
 _EOF_
 done
