@@ -115,6 +115,7 @@ _EOF_
 
   cat >> ${configFile} <<_EOF_
   server_name         ${NGINX_SERVER_NAME};
+
 _EOF_
 
   if [ -n "$NGINX_CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
@@ -128,16 +129,29 @@ _EOF_
   fi
 
   if [ ! -n "$NGINX_CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
-    cat >> ${configFile} <<_EOF_
+    if [ "${NGINX_LETSENCRYPT_CERTIFICATES}" = 'true' ]; then
+      cat >> ${configFile} <<_EOF_
+  ssl_certificate         ${NGINX_CERTIFICATE_TRUSTED};
+  ssl_certificate_key     ${NGINX_CERTIFICATE_KEY};
+_EOF_
+    else
+      cat >> ${configFile} <<_EOF_
   ssl_certificate         ${NGINX_CERTIFICATE_FILE};
   ssl_certificate_key     ${NGINX_CERTIFICATE_KEY};
 _EOF_
+    fi
   fi
 
   if [ -n "$NGINX_CERTIFICATE_TRUSTED" ]; then
-    cat >> ${configFile} <<_EOF_
+    if [ "${NGINX_LETSENCRYPT_CERTIFICATES}" = 'true' ]; then
+      cat >> ${configFile} <<_EOF_
+  ssl_trusted_certificate ${NGINX_CERTIFICATE_FILE};
+_EOF_
+    else
+      cat >> ${configFile} <<_EOF_
   ssl_trusted_certificate ${NGINX_CERTIFICATE_TRUSTED};
 _EOF_
+    fi
   fi
 
   if [ -n "$NGINX_CERTIFICATE_DNAME" ] && [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
