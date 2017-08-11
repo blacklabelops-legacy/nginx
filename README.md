@@ -437,6 +437,39 @@ $ docker run -d \
     blacklabelops/nginx
 ~~~~
 
+# Use IPv6
+
+You can use IPv6 instead of IPv4 (default).
+
+~~~~
+$ docker run -d \
+    -p 80:80 \
+    --name nginx \
+    -e "NGINX_USE_IPV6"="true"
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    blacklabelops/nginx
+~~~~
+
+# Use custom HTTP or HTTPS ports
+
+If you want to pass requests to the Docker host, you need to connect the NGINX container directly to the host networking stack.
+
+Unfortunately, if your Docker host is running on a QNAP NAS, port 80 and 443 are already used by the embedded web server. You can use custom ports in such a case.
+
+~~~~
+$ docker run -d \
+    --net=host \
+    --name nginx \
+    -e "NGINX_HTTP_PORT"="9000" \
+    -e "NGINX_HTTPS_PORT"="9001" \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://localhost:8080" \
+    blacklabelops/nginx
+~~~~
+
+> Note: If you use port forwarding on your router, you need to forward port 80 and 443 to port 9000 and 9001.
+
 # Build The Image
 
 The build process can take the following argument:
