@@ -177,8 +177,10 @@ _EOF_
 
     setProxyHeaderFields $1 $i
 
-    setProxyDirectiveFields $1 $i
   fi
+
+  # support custom configuration for a location
+  setProxyDirectiveFields $1 $i
 
   if [ -n "${NGINX_PROXY_BASIC_AUTH_REALM}" ]; then
     htpasswd_file=$configFileReverseProxy/htpasswd_reverse_proxy$i

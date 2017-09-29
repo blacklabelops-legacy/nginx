@@ -32,6 +32,8 @@ http {
   tcp_nodelay           on;
 
   resolver ${NAMESERVER} ipv6=off valid=30s;
+
+  include mime.types;
 _EOF_
 
 nginx_upload_size='100m'

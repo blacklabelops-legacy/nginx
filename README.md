@@ -470,6 +470,32 @@ $ docker run -d \
 
 > Note: If you use port forwarding on your router, you need to forward port 80 and 443 to port 9000 and 9001.
 
+# Serving static files
+
+When using frameworks such as Django behind a reverse proxy, best practice is to use nginx to serve static files such as css or js files.
+
+To support this use a Docker volume to map the static files into the nginx container and a custom Proxy Directive to make it available at a location:
+
+~~~~
+$ docker run -d \
+    --name app \
+    --network app_network \
+    -v app_volume:<path to static files> \
+    my/app
+
+$ docker run -d \
+    -p 80:80 \
+    --name nginx \
+    --network app_network \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://app:8080" \
+    -e "SERVER1REVERSE_PROXY_LOCATION2=/static/" \
+    -e "SERVER1REVERSE_PROXY_APPLICATION2=custom" \
+    -e "SERVER1REVERSE_PROXY_DIRECTIVE2FIELD1: 'alias /var/lib/nginx/html/static/' \
+    -v app_volume:/var/lib/nginx/html/static \
+    blacklabelops/nginx
+~~~~
+
 # Build The Image
 
 The build process can take the following argument:
