@@ -25,7 +25,7 @@ events {
 http {
   log_format  main  '${LOG_FORMAT}';
 
-  access_log ${ACCESS_LOG};
+  access_log ${ACCESS_LOG} main;
 
   sendfile              on;
   tcp_nopush            on;
