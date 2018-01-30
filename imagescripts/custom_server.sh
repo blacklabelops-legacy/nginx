@@ -22,6 +22,7 @@ for (( j=1; ; j++ ))
 do
   configFile=${NGINX_DIRECTORY}/conf.d/server${j}.conf
   VAR_TESTPASS="SERVER${j}REVERSE_PROXY_LOCATION1"
+  VAR_TESTPASS_ZWEI="SERVER${j}PROXY_CONFIGURATION"
   VAR_NGINX_SERVER_NAME="SERVER${j}SERVER_NAME"
   VAR_NGINX_HTTP_ENABLED="SERVER${j}HTTP_ENABLED"
   VAR_NGINX_HTTPS_ENABLED="SERVER${j}HTTPS_ENABLED"
@@ -30,8 +31,9 @@ do
   VAR_NGINX_CERTIFICATE_TRUSTED="SERVER${j}CERTIFICATE_TRUSTED"
   VAR_NGINX_CERTIFICATE_DNAME="SERVER${j}CERTIFICATE_DNAME"
   VAR_LETSENCRYPT_CERTIFICATES="SERVER${j}LETSENCRYPT_CERTIFICATES"
+  VAR_NGINX_PROXY_CONFIGURATION="SERVER${j}PROXY_CONFIGURATION"
 
-  if [ ! -n "${!VAR_TESTPASS}" ]; then
+  if [ ! -n "${!VAR_TESTPASS}" ] && [ ! -n "${!VAR_TESTPASS_ZWEI}" ]; then
     break
   fi
 
@@ -197,12 +199,20 @@ _EOF_
         mkdir -p /var/www/letsencrypt
   fi
 
-  source $CUR_DIR/reverse_proxy.sh SERVER${j} ${j}
+  if [ -n "${!VAR_NGINX_PROXY_CONFIGURATION}" ]; then
+cat >> ${configFile} <<_EOF_
+  include ${!VAR_NGINX_PROXY_CONFIGURATION};
+}
+_EOF_
+  else
+    source $CUR_DIR/reverse_proxy.sh SERVER${j} ${j}
 
-  cat >> ${configFile} <<_EOF_
+cat >> ${configFile} <<_EOF_
   # Load configuration files for the default server block.
   include ${NGINX_DIRECTORY}/conf.d/server${j}/*.conf;
 }
 _EOF_
+  fi
+
   cat ${configFile}
 done

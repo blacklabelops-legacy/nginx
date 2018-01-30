@@ -56,7 +56,7 @@ cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
   include ${NGINX_DIRECTORY}/conf.d/*.conf;
 _EOF_
 
-if [ -n "${SERVER1REVERSE_PROXY_LOCATION1}" ]; then
+if [ -n "${SERVER1REVERSE_PROXY_LOCATION1}" ] || [ -n "${SERVER1PROXY_CONFIGURATION}" ]; then
   source $CUR_DIR/custom_server.sh
 else
   source $CUR_DIR/default_server.sh
