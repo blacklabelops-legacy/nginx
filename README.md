@@ -56,7 +56,7 @@ $ docker run -d \
     -p 80:80 \
     --name nginx \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     blacklabelops/nginx
 ~~~~
 
@@ -71,23 +71,23 @@ Example:
 Server 1 Reverse Proxy 1:
 
 * Location: /
-* Proxy Pass: http://www.heise.de
+* Proxy Pass: http://www.heise.de/
 
 Server 2 Reverse Proxy 1:
 
 * Server name: dummy.example.com
 * Location: /
-* Proxy Pass: http://www.alternate.de
+* Proxy Pass: http://www.alternate.de/
 
 ~~~~
 $ docker run -d \
     -p 80:80 \
     --name nginx \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     -e "SERVER2SERVER_NAME=dummy.example.com" \
     -e "SERVER2REVERSE_PROXY_LOCATION1=/alternate" \
-    -e "SERVER2REVERSE_PROXY_PASS1=http://www.alternate.de" \
+    -e "SERVER2REVERSE_PROXY_PASS1=http://www.alternate.de/" \
     blacklabelops/nginx
 ~~~~
 
@@ -102,21 +102,21 @@ Example:
 Reverse Proxy 1:
 
 * Location: /
-* Proxy Pass: http://www.heise.de
+* Proxy Pass: http://www.heise.de/
 
 Reverse Proxy 2:
 
 * Location: /alternate
-* Proxy Pass: http://www.alternate.de
+* Proxy Pass: http://www.alternate.de/
 
 ~~~~
 $ docker run -d \
     -p 80:80 \
     --name nginx \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     -e "SERVER1REVERSE_PROXY_LOCATION2=/alternate" \
-    -e "SERVER1REVERSE_PROXY_PASS2=http://www.alternate.de" \
+    -e "SERVER1REVERSE_PROXY_PASS2=http://www.alternate.de/" \
     blacklabelops/nginx
 ~~~~
 
@@ -141,7 +141,7 @@ $ docker run -d \
     -p 80:80 \
     -p 443:443 \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     -e "SERVER1CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
     -e "SERVER1HTTPS_ENABLED=true" \
     --name nginx \
@@ -161,7 +161,7 @@ $ docker run -d \
     -p 443:443 \
     -v /mycertificatepath/mycertificates:/opt/nginx/keys \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     -e "SERVER1HTTPS_ENABLED=true" \
     -e "SERVER1CERTIFICATE_FILE=/opt/nginx/keys/server.csr" \
     -e "SERVER1CERTIFICATE_KEY=/opt/nginx/keys/server.key" \
@@ -179,7 +179,7 @@ Example:
 $ docker run -d \
     -p 443:443 \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     -e "SERVER1HTTPS_ENABLED=true" \
     -e "SERVER1CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
     -e "SERVER1HTTP_ENABLED=false" \
@@ -217,7 +217,7 @@ $ docker run -d \
     --name nginx \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e 'SERVER1PROXY_APPLICATION=custom' \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://jira.example.com" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://jira.example.com/" \
     -e 'SERVER1REVERSE_PROXY_HEADER1FIELD1=X-Forwarded-Host $host' \
     -e 'SERVER1REVERSE_PROXY_HEADER1FIELD2=X-Forwarded-Server $host' \
     -e 'SERVER1REVERSE_PROXY_HEADER1FIELD3=X-Forwarded-For $proxy_add_x_forwarded_for' \
@@ -233,8 +233,8 @@ Means that a call on the http adress will be redirected to https. Useful when us
 
 Example:
 
-1. Enter the URL `http://www.example.com`
-1. Your browser will be redirected to `https://www.example.com`
+1. Enter the URL `http://www.example.com/`
+1. Your browser will be redirected to `https://www.example.com/`
 
 This setting will be activated for all servers and all servers must deactivate http.
 
@@ -252,7 +252,7 @@ $ docker run -d \
     -e "NGINX_REDIRECT_PORT80=true" \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
     -e "SERVER1SERVER_NAME=localhost" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     -e "SERVER1HTTPS_ENABLED=true" \
     -e "SERVER1CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
     -e "SERVER1HTTP_ENABLED=false" \
@@ -300,7 +300,7 @@ $ docker run -d \
     -v letsencrypt_certs:/etc/letsencrypt \
     -e "NGINX_REDIRECT_PORT80=true" \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     -e "SERVER1HTTPS_ENABLED=true" \
     -e "SERVER1HTTP_ENABLED=false" \
     -e "SERVER1LETSENCRYPT_CERTIFICATES=true" \
@@ -342,7 +342,7 @@ $ docker run -d \
     -v letsencrypt_challenges:/var/www/letsencrypt \
     -e "NGINX_REDIRECT_PORT80=true" \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     -e "SERVER1HTTPS_ENABLED=true" \
     -e "SERVER1HTTP_ENABLED=false" \
     -e "SERVER1LETSENCRYPT_CERTIFICATES=true" \
@@ -395,7 +395,7 @@ docker run -d \
     -p 80:80 \
     --name nginx \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     -e "SERVER1REVERSE_PROXY_BASIC_AUTH_REALM1=Secure Location" \
     -e "SERVER1REVERSE_PROXY_BASIC_AUTH1USER1=admin" \
     -e "SERVER1REVERSE_PROXY_BASIC_AUTH1PASSWORD1=admin" \
@@ -411,7 +411,7 @@ docker run -d \
     -p 80:80 \
     --name nginx \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     -e "SERVER1REVERSE_PROXY_BASIC_AUTH_REALM1=Secure Location" \
     -e "SERVER1REVERSE_PROXY_BASIC_AUTH1USER1=admin1" \
     -e "SERVER1REVERSE_PROXY_BASIC_AUTH1PASSWORD1=admin1" \
@@ -431,7 +431,7 @@ $ docker run -d \
     -p 80:80 \
     --name nginx \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     -e "LOG_LEVEL=warn" \
     -e "DISABLE_ACCESS_LOG=true" \
     blacklabelops/nginx
@@ -447,7 +447,7 @@ $ docker run -d \
     --name nginx \
     -e "NGINX_USE_IPV6"="true"
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
     blacklabelops/nginx
 ~~~~
 
@@ -464,7 +464,7 @@ $ docker run -d \
     -e "NGINX_HTTP_PORT"="9000" \
     -e "NGINX_HTTPS_PORT"="9001" \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://localhost:8080" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://localhost:8080/" \
     blacklabelops/nginx
 ~~~~
 
@@ -488,7 +488,7 @@ $ docker run -d \
     --name nginx \
     --network app_network \
     -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
-    -e "SERVER1REVERSE_PROXY_PASS1=http://app:8080" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://app:8080/" \
     -e "SERVER1REVERSE_PROXY_LOCATION2=/static/" \
     -e "SERVER1REVERSE_PROXY_APPLICATION2=custom" \
     -e "SERVER1REVERSE_PROXY_DIRECTIVE2FIELD1: 'alias /var/lib/nginx/html/static/' \
