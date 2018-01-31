@@ -163,12 +163,18 @@ do
     NGINX_PROXY_APPLICATION=${NGINX_PROXY_APPLICATION_PROXY}
   fi
 
-  cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
+  if [ "${NGINX_PROXY_DISABLE_RESOLVER}" = 'true' ]; then
+    cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
         location ${NGINX_PROXY_LOCATION} {
 _EOF_
+  else
+    cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
+        location ~* ^${NGINX_PROXY_LOCATION}(.*) {
+_EOF_
+  fi
 
   REVERSE_PROXY_BACKEND_VARIABLE='$backend'
-  REVERSE_PROXY_BACKEND='$backend$request_uri'
+  REVERSE_PROXY_BACKEND='$backend$1$is_args$args'
 
   if [ -n "${NGINX_PROXY_PASS}" ]; then
     if [ "${NGINX_PROXY_DISABLE_RESOLVER}" = 'true' ]; then
