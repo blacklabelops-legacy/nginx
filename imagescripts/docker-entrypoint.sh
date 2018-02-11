@@ -2,6 +2,8 @@
 
 set -o errexit
 
+[[ ${DEBUG} == true ]] && set -x
+
 # Setting environment variables
 readonly CUR_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
 
