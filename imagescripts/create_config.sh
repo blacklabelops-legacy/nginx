@@ -24,8 +24,17 @@ events {
 
 http {
   log_format  main  '${LOG_FORMAT}';
-
+_EOF_
+if [ "${DISABLE_ACCESS_LOG}" = 'true' ]; then
+  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
+  access_log ${ACCESS_LOG};
+_EOF_
+else
+  cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
   access_log ${ACCESS_LOG} main;
+_EOF_
+fi
+cat >> ${NGINX_DIRECTORY}/nginx.conf <<_EOF_
 
   sendfile              on;
   tcp_nopush            on;
