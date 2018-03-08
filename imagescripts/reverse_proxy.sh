@@ -174,7 +174,10 @@ _EOF_
   fi
 
   REVERSE_PROXY_BACKEND_VARIABLE='$backend'
-  REVERSE_PROXY_BACKEND='$backend$1$is_args$args'
+  REVERSE_PROXY_PATH_VARIABLE='$path'
+  REVERSE_PROXY_BACKEND='$backend$is_args$args'
+  REVERSE_PROXY_BACKEND_WITH_PATH='$backend/$path$is_args$args'
+  REVERSE_PROXY_VARIABLE='$1'
 
   if [ -n "${NGINX_PROXY_PASS}" ]; then
     if [ "${NGINX_PROXY_DISABLE_RESOLVER}" = 'true' ]; then
@@ -184,7 +187,13 @@ _EOF_
     else
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
           set ${REVERSE_PROXY_BACKEND_VARIABLE} "${NGINX_PROXY_PASS}";
-          proxy_pass ${REVERSE_PROXY_BACKEND};
+          set ${REVERSE_PROXY_PATH_VARIABLE} ${REVERSE_PROXY_VARIABLE};
+          if (${REVERSE_PROXY_PATH_VARIABLE} != false) {
+            proxy_pass ${REVERSE_PROXY_BACKEND_WITH_PATH};
+          }
+          if (${REVERSE_PROXY_PATH_VARIABLE} = false) {
+            proxy_pass ${REVERSE_PROXY_BACKEND};
+          }
 _EOF_
     fi
 
