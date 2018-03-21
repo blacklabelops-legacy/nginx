@@ -266,6 +266,29 @@ $ docker run -d \
 
 > You can now access http://localhost and https://localhost and http will be redirected to https.
 
+# Websocket Proxy
+
+You can enable a proxy for websockets. This is controlled by the environment variable `REVERSE_PROXY_WEBSOCKET`.
+Possible values are either `true` or `false` (Default is `false`).
+
+The environment variable can be enabled for each proxy.
+
+Example:
+
+~~~~
+$ docker run -d \
+    -p 80:80 \
+    --name nginx \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/websocket" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.yourserver.com/" \
+    -e "SERVER1REVERSE_PROXY_WEBSOCKET1=true" \
+    -e "SERVER1REVERSE_PROXY_LOCATION2=/" \
+    -e "SERVER1REVERSE_PROXY_PASS2=http://www.yourserver.com/" \
+    blacklabelops/nginx
+~~~~
+
+> Proxy 1 has websocket support enabled and for Proxy 2 websocket support is disabled.
+
 # Generating Green HTTPS Certificates with Letsencrypt
 
 You can get and use free green certificates by [Letsencrypt](https://letsencrypt.org/). Here I will provide a manual way to generate and retrieve the certificate manually and use it inside the container. The full detailed letsencrypt documentation can be found here: [Documentation](https://community.letsencrypt.org/c/docs/)
