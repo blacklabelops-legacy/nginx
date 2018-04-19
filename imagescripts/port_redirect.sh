@@ -3,9 +3,14 @@
 set -o errexit
 
 nginx_use_ipv6="false"
+nginx_http_port="80"
 
 if [ -n "${NGINX_IPV6_ENABLED}" ]; then
   nginx_use_ipv6=${NGINX_IPV6_ENABLED}
+fi
+
+if [ -n "${NGINX_HTTP_PORT}" ]; then
+  nginx_http_port=${NGINX_HTTP_PORT}
 fi
 
 NGINX_PORT_REDIRECT_PATTERN='https://$server_name$request_uri'
