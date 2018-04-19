@@ -57,4 +57,5 @@ _EOF_
 _EOF_
 done
 
+echo "${PORT_REDIRECT_FILE}:"
 cat ${PORT_REDIRECT_FILE}

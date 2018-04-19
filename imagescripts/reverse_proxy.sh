@@ -252,3 +252,5 @@ _EOF_
 _EOF_
   cat $configFileReverseProxy/reverseProxy.conf
 done
+
+echo "$configFileReverseProxy/reverseProxy.conf:"

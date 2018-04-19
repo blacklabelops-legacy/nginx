@@ -214,5 +214,6 @@ cat >> ${configFile} <<_EOF_
 _EOF_
   fi
 
+  echo "${configFile}:"
   cat ${configFile}
 done
