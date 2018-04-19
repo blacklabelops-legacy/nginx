@@ -35,25 +35,23 @@ do
   fi
 
   cat >> ${PORT_REDIRECT_FILE} <<_EOF_
-
-  server {
+server {
 _EOF_
 
   if [ "${nginx_use_ipv6}" = 'true' ]; then
     cat >> ${PORT_REDIRECT_FILE} <<_EOF_
-      listen       [::]:80;
+  listen       [::]:${nginx_http_port};
 _EOF_
   else
     cat >> ${PORT_REDIRECT_FILE} <<_EOF_
-      listen       80;
+  listen       ${nginx_http_port};
 _EOF_
   fi
 
   cat >> ${PORT_REDIRECT_FILE} <<_EOF_
-      server_name  ${NGINX_SERVER_NAME};
-      return       301 ${NGINX_PORT_REDIRECT_PATTERN};
-  }
-
+  server_name  ${NGINX_SERVER_NAME};
+  return       301 ${NGINX_PORT_REDIRECT_PATTERN};
+}
 _EOF_
 done
 

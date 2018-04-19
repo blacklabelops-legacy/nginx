@@ -14,57 +14,57 @@ function setApplicationHeaders() {
   case "$applicationId" in
     confluence)
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
+  proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
 _EOF_
       ;;
     confluence6)
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade ${REVERSE_PROXY_UPGRADE};
-          proxy_set_header Connection ${REVERSE_PROXY_CONNECTION_UPGRADE};
+  proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade ${REVERSE_PROXY_UPGRADE};
+  proxy_set_header Connection ${REVERSE_PROXY_CONNECTION_UPGRADE};
 _EOF_
       ;;
     jira)
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
+  proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
 _EOF_
       ;;
     crowd)
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_set_header Host ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
-          proxy_set_header X-Forwarded-for ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
-          port_in_redirect off;
+  proxy_set_header Host ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
+  proxy_set_header X-Forwarded-for ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
+  port_in_redirect off;
 _EOF_
       ;;
     bitbucket)
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
-          proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
+  proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
+  proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
 _EOF_
       ;;
     jenkins)
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_set_header Host ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
-          proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
-          proxy_set_header X-Forwarded-Proto ${REVERSE_PROXY_PROTO_HEADER};
+  proxy_set_header Host ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
+  proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
+  proxy_set_header X-Forwarded-Proto ${REVERSE_PROXY_PROTO_HEADER};
 _EOF_
       ;;
     crucible)
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_set_header Host ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
-          proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
+  proxy_set_header Host ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
+  proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
 _EOF_
       ;;
     custom)
@@ -73,13 +73,13 @@ _EOF_
       ;;
     *)
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_set_header X_FORWARDED_PROTO ${REVERSE_PROXY_PROTO_HEADER};
-          proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
-          proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
-          proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
-          proxy_set_header Host ${REVERSE_PROXY_HOST_HEADER};
-          port_in_redirect off;
+  proxy_set_header X_FORWARDED_PROTO ${REVERSE_PROXY_PROTO_HEADER};
+  proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
+  proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
+  proxy_set_header X-Real-IP ${REVERSE_PROXY_UP_HEADER};
+  proxy_set_header Host ${REVERSE_PROXY_HOST_HEADER};
+  port_in_redirect off;
 _EOF_
   esac
 }
@@ -93,7 +93,7 @@ function setProxyHeaderFields() {
     fi
     NGINX_PROXY_HEADER_FIELD=${!VAR_PROXY_HEADER_FIELD}
     cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_set_header ${NGINX_PROXY_HEADER_FIELD};
+  proxy_set_header ${NGINX_PROXY_HEADER_FIELD};
 _EOF_
   done
 }
@@ -107,7 +107,7 @@ function setProxyDirectiveFields() {
     fi
     NGINX_PROXY_DIRECTIVE_FIELD=${!VAR_PROXY_DIRECTIVE_FIELD}
     cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          ${NGINX_PROXY_DIRECTIVE_FIELD};
+  ${NGINX_PROXY_DIRECTIVE_FIELD};
 _EOF_
   done
 }
@@ -167,11 +167,11 @@ do
 
   if [ "${NGINX_PROXY_DISABLE_RESOLVER}" = 'true' ]; then
     cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-        location ${NGINX_PROXY_LOCATION} {
+location ${NGINX_PROXY_LOCATION} {
 _EOF_
   else
     cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-        location ~* ^${NGINX_PROXY_LOCATION}(.*) {
+location ~* ^${NGINX_PROXY_LOCATION}(.*) {
 _EOF_
   fi
 
@@ -184,18 +184,18 @@ _EOF_
   if [ -n "${NGINX_PROXY_PASS}" ]; then
     if [ "${NGINX_PROXY_DISABLE_RESOLVER}" = 'true' ]; then
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_pass ${NGINX_PROXY_PASS};
+  proxy_pass ${NGINX_PROXY_PASS};
 _EOF_
     else
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          set ${REVERSE_PROXY_BACKEND_VARIABLE} "${NGINX_PROXY_PASS}";
-          set ${REVERSE_PROXY_PATH_VARIABLE} ${REVERSE_PROXY_VARIABLE};
-          if (${REVERSE_PROXY_PATH_VARIABLE} != false) {
-            proxy_pass ${REVERSE_PROXY_BACKEND_WITH_PATH};
-          }
-          if (${REVERSE_PROXY_PATH_VARIABLE} = false) {
-            proxy_pass ${REVERSE_PROXY_BACKEND};
-          }
+  set ${REVERSE_PROXY_BACKEND_VARIABLE} "${NGINX_PROXY_PASS}";
+  set ${REVERSE_PROXY_PATH_VARIABLE} ${REVERSE_PROXY_VARIABLE};
+  if (${REVERSE_PROXY_PATH_VARIABLE} != false) {
+  proxy_pass ${REVERSE_PROXY_BACKEND_WITH_PATH};
+  }
+  if (${REVERSE_PROXY_PATH_VARIABLE} = false) {
+  proxy_pass ${REVERSE_PROXY_BACKEND};
+  }
 _EOF_
     fi
 
@@ -204,9 +204,9 @@ _EOF_
       REVERSE_PROXY_CONNECTION_UPGRADE='"upgrade"'
 
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade ${REVERSE_PROXY_UPGRADE};
-          proxy_set_header Connection ${REVERSE_PROXY_CONNECTION_UPGRADE};
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade ${REVERSE_PROXY_UPGRADE};
+  proxy_set_header Connection ${REVERSE_PROXY_CONNECTION_UPGRADE};
 _EOF_
     fi
 
@@ -223,32 +223,32 @@ _EOF_
     htpasswd_file=$configFileReverseProxy/htpasswd_reverse_proxy$i
     touch $htpasswd_file
     cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          auth_basic "${NGINX_PROXY_BASIC_AUTH_REALM}";
-          auth_basic_user_file ${htpasswd_file};
+  auth_basic "${NGINX_PROXY_BASIC_AUTH_REALM}";
+  auth_basic_user_file ${htpasswd_file};
 _EOF_
     createBasicAuthFile "$1REVERSE_PROXY_BASIC_AUTH${i}" $htpasswd_file
   fi
 
   if [ -n "${NGINX_PROXY_BUFFERING}" ]; then
     cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_buffering ${NGINX_PROXY_BUFFERING};
+  proxy_buffering ${NGINX_PROXY_BUFFERING};
 _EOF_
   fi
 
   if [ -n "${NGINX_PROXY_BUFFERS}" ]; then
     cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_buffers ${NGINX_PROXY_BUFFERS};
+  proxy_buffers ${NGINX_PROXY_BUFFERS};
 _EOF_
   fi
 
   if [ -n "${NGINX_PROXY_BUFFERS_SIZE}" ]; then
     cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-          proxy_buffer_size ${NGINX_PROXY_BUFFERS_SIZE};
+  proxy_buffer_size ${NGINX_PROXY_BUFFERS_SIZE};
 _EOF_
   fi
 
   cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-        }
+}
 _EOF_
 done
 

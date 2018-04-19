@@ -81,21 +81,21 @@ _EOF_
     if [ "${NGINX_SERVER_NAME}" = '_' ]; then
       if [ "${nginx_use_ipv6}" = 'true' ]; then
         cat >> ${configFile} <<_EOF_
-  listen       [::]:${nginx_http_port} default_server;
+  listen              [::]:${nginx_http_port} default_server;
 _EOF_
       else
         cat >> ${configFile} <<_EOF_
-  listen       ${nginx_http_port} default_server;
+  listen              ${nginx_http_port} default_server;
 _EOF_
       fi
     else
       if [ "${nginx_use_ipv6}" = 'true' ]; then
         cat >> ${configFile} <<_EOF_
-  listen       [::]:${nginx_http_port};
+  listen             [::]:${nginx_http_port};
 _EOF_
       else
         cat >> ${configFile} <<_EOF_
-  listen       ${nginx_http_port};
+  listen             ${nginx_http_port};
 _EOF_
       fi
     fi
@@ -104,19 +104,19 @@ _EOF_
   if [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
     if [ "${nginx_use_ipv6}" = 'true' ]; then
       cat >> ${configFile} <<_EOF_
-  listen              [::]:${nginx_https_port} ipv6only=on ssl;
-  keepalive_timeout   0;
+  listen             [::]:${nginx_https_port} ipv6only=on ssl;
+  keepalive_timeout  0;
 _EOF_
     else
       cat >> ${configFile} <<_EOF_
-  listen              ${nginx_https_port} ssl;
-  keepalive_timeout   0;
+  listen             ${nginx_https_port} ssl;
+  keepalive_timeout  0;
 _EOF_
     fi
   fi
 
   cat >> ${configFile} <<_EOF_
-  server_name         ${NGINX_SERVER_NAME};
+  server_name        ${NGINX_SERVER_NAME};
 
 _EOF_
 
