@@ -73,7 +73,7 @@ _EOF_
       ;;
     *)
       cat >> $configFileReverseProxy/reverseProxy.conf <<_EOF_
-  proxy_set_header X_FORWARDED_PROTO ${REVERSE_PROXY_PROTO_HEADER};
+  proxy_set_header X-Forwarded-Proto ${REVERSE_PROXY_PROTO_HEADER};
   proxy_set_header X-Forwarded-Host ${REVERSE_PROXY_HOST_HEADER};
   proxy_set_header X-Forwarded-Server ${REVERSE_PROXY_HOST_HEADER};
   proxy_set_header X-Forwarded-For ${REVERSE_PROXY_HOST_HEADER_FORWARDED_FOR};
