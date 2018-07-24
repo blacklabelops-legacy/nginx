@@ -1,4 +1,4 @@
-FROM blacklabelops/alpine:3.7
+FROM blacklabelops/alpine:3.8
 
 # Build time arguments
 #Values: latest or version number (e.g. 1.8.1-r0)
