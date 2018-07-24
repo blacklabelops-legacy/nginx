@@ -5,6 +5,7 @@ set -o errexit
 nginx_use_ipv6="false"
 nginx_http_port="80"
 nginx_https_port="443"
+nginx_http2_token=""
 
 if [ -n "${NGINX_USE_IPV6}" ]; then
   nginx_use_ipv6=${NGINX_USE_IPV6}
@@ -16,6 +17,10 @@ fi
 
 if [ -n "${NGINX_HTTPS_PORT}" ]; then
   nginx_https_port=${NGINX_HTTPS_PORT}
+fi
+
+if [ "${NGINX_HTTP2_ENABLED}" = 'true' ]; then
+  nginx_http2_token=" http2"
 fi
 
 for (( j=1; ; j++ ))
@@ -104,12 +109,12 @@ _EOF_
   if [ "${NGINX_HTTPS_ENABLED}" = 'true' ]; then
     if [ "${nginx_use_ipv6}" = 'true' ]; then
       cat >> ${configFile} <<_EOF_
-  listen             [::]:${nginx_https_port} ipv6only=on ssl;
+  listen             [::]:${nginx_https_port} ipv6only=on ssl${nginx_http2_token};
   keepalive_timeout  0;
 _EOF_
     else
       cat >> ${configFile} <<_EOF_
-  listen             ${nginx_https_port} ssl;
+  listen             ${nginx_https_port} ssl${nginx_http2_token};
   keepalive_timeout  0;
 _EOF_
     fi

@@ -266,6 +266,27 @@ $ docker run -d \
 
 > You can now access http://localhost and https://localhost and http will be redirected to https.
 
+# HTTP2 Support
+
+> Note: Only usable in combination with ssl/https.
+
+You can add HTTP2 support to your proxy with the environment variable `NGINX_HTTP2_ENABLED=true`
+
+Example:
+
+~~~~
+$ docker run -d \
+    -p 443:443 \
+    -e "SERVER1REVERSE_PROXY_LOCATION1=/" \
+    -e "SERVER1REVERSE_PROXY_PASS1=http://www.heise.de/" \
+    -e "SERVER1HTTPS_ENABLED=true" \
+    -e "SERVER1CERTIFICATE_DNAME=/CN=SBleul/OU=Blacklabelops/O=blacklabelops.com/L=Munich/C=DE" \
+    -e "NGINX_HTTP2_ENABLED=true" \
+    --name nginx \
+    blacklabelops/nginx
+~~~~
+
+
 # Websocket Proxy
 
 You can enable a proxy for websockets. This is controlled by the environment variable `REVERSE_PROXY_WEBSOCKET`.
