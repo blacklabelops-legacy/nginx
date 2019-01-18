@@ -1,7 +1,5 @@
 # Dockerized Nginx
 
-[![Docker Stars](https://img.shields.io/docker/stars/blacklabelops/nginx.svg)](https://hub.docker.com/r/blacklabelops/nginx/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacklabelops/nginx.svg)](https://hub.docker.com/r/blacklabelops/nginx/)
-
 # Supported Tags And Respective Dockerfiles
 
 | Nginx Version     | Tag          | Dockerfile |
@@ -19,14 +17,6 @@
 * Supports https and ad-hoc self-signed certificates
 * Supports ssl certificate specification for every server.
 * Supports letsencrypt certificates.
-
-# Support & Feature Requests
-
-Leave a message and ask questions on Hipchat: [blacklabelops/hipchat](http://support.blacklabelops.com)
-
-Maybe no one has ever told you, but munich developers run on beer! If you like my work, share a beer!
-
-[![BeerMe](https://raw.githubusercontent.com/ikkez/Beer-Donation-Button/gh-pages/img/beer_donation_button_single.png)](https://www.paypal.me/donateblacklabelops)
 
 # Make It Short!
 
